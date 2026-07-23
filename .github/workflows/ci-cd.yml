@@ -81,6 +81,7 @@ jobs:
       - name: Run tests
         working-directory: services/${{ matrix.service }}
         env:
+          PYTHONPATH: .
           DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@localhost:5432/beefshteks
           REDIS_URL: redis://localhost:6379/0
         run: pytest tests -v --tb=short
