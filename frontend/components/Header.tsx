@@ -352,7 +352,7 @@ export default function Header({
         )}
 
         <div className={`header-actions ${inMenu ? "" : "header-actions--hero"}`}>
-          {isHome ? (
+          {isHome && !inMenu ? (
             <div className="header-prefs" role="group" aria-label="Language and theme">
               <button
                 type="button"
