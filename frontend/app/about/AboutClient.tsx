@@ -177,18 +177,25 @@ export default function AboutClient() {
             <figure className="about-delivery-map">
               <iframe
                 className="about-delivery-map__frame"
-                title="Карта доставки BEEFштекс — Коломна"
-                src="https://yandex.ru/map-widget/v1/?ll=38.800483%2C55.084059&z=12&ol=biz&oid=24908451928"
+                title="Карта зон доставки BEEFштекс — Коломна"
+                src="https://yandex.ru/map-widget/v1/?um=constructor%3Ac60d22963c20c3659cb24ca5411ca173be036e43f5ab2d739b2ad4d21e68032c&source=constructor&ll=38.837625%2C55.065694&z=13"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
               />
               <figcaption>
-                <strong>Карта доставки</strong>
+                <strong>Карта зон доставки</strong>
                 <span>
-                  Ресторан в ТРЦ Рио. Зоны и цены — в списке слева; перед заказом уточняйте район по
+                  Цветные зоны на карте. Цены — в списке слева; перед заказом уточняйте район по
                   телефону.
                 </span>
+                <a
+                  href="https://yandex.ru/maps/10734/kolomna/?ll=38.837625%2C55.065694&mode=usermaps&um=constructor%3Ac60d22963c20c3659cb24ca5411ca173be036e43f5ab2d739b2ad4d21e68032c&z=12.97"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Открыть карту зон
+                </a>
                 <a href={`tel:${tel}`}>Уточнить зону · +7 (916) 035-67-77</a>
               </figcaption>
             </figure>
