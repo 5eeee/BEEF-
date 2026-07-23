@@ -31,6 +31,18 @@ const SORTS = [
   { id: "price_desc", label: "Сначала дороже" },
 ] as const;
 
+function scrollToCategory(slug: string | null) {
+  if (!slug) {
+    document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  const el = document.getElementById(`cat-${slug}`);
+  if (!el) return;
+  const headerOffset = 108;
+  const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+  window.scrollTo({ top, behavior: "smooth" });
+}
+
 export default function MenuCatalog({
   categories,
   products,
@@ -60,15 +72,7 @@ export default function MenuCatalog({
     return () => window.removeEventListener("cart-updated", sync);
   }, []);
 
-  const categoryName = useMemo(() => {
-    if (!category) return null;
-    return categories.find((c) => c.slug === category)?.name ?? category;
-  }, [category, categories]);
-
   const sections = useMemo(() => {
-    if (category) {
-      return [{ slug: category, title: categoryName ?? "Меню", items: products }];
-    }
     const byCat = new Map<string, Product[]>();
     for (const p of products) {
       const list = byCat.get(p.category_slug) ?? [];
@@ -78,7 +82,37 @@ export default function MenuCatalog({
     return categories
       .filter((c) => byCat.has(c.slug))
       .map((c) => ({ slug: c.slug, title: c.name, items: byCat.get(c.slug)! }));
-  }, [products, category, categories, categoryName]);
+  }, [products, categories]);
+
+  useEffect(() => {
+    if (loading || sections.length === 0) return;
+
+    const nodes = sections
+      .map((s) => document.getElementById(`cat-${s.slug}`))
+      .filter((n): n is HTMLElement => Boolean(n));
+    if (!nodes.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0];
+        if (!top?.target?.id) return;
+        const slug = top.target.id.replace(/^cat-/, "");
+        onCategoryChange(slug);
+      },
+      { root: null, rootMargin: "-25% 0px -55% 0px", threshold: [0.15, 0.35, 0.55] }
+    );
+
+    nodes.forEach((n) => observer.observe(n));
+    return () => observer.disconnect();
+  }, [loading, sections, onCategoryChange]);
+
+  const selectCategory = (slug: string | null) => {
+    onCategoryChange(slug);
+    scrollToCategory(slug);
+  };
 
   return (
     <div className="ye ye--split">
@@ -87,7 +121,7 @@ export default function MenuCatalog({
         <button
           type="button"
           className={`ye-cats__item ${category === null ? "is-active" : ""}`}
-          onClick={() => onCategoryChange(null)}
+          onClick={() => selectCategory(null)}
         >
           Все
         </button>
@@ -96,7 +130,7 @@ export default function MenuCatalog({
             key={cat.slug}
             type="button"
             className={`ye-cats__item ${category === cat.slug ? "is-active" : ""}`}
-            onClick={() => onCategoryChange(cat.slug)}
+            onClick={() => selectCategory(cat.slug)}
           >
             {cat.name}
           </button>
@@ -183,7 +217,7 @@ export default function MenuCatalog({
         <button
           type="button"
           className={`ye-cats-mobile__item ${category === null ? "is-active" : ""}`}
-          onClick={() => onCategoryChange(null)}
+          onClick={() => selectCategory(null)}
         >
           Все
         </button>
@@ -192,7 +226,7 @@ export default function MenuCatalog({
             key={cat.slug}
             type="button"
             className={`ye-cats-mobile__item ${category === cat.slug ? "is-active" : ""}`}
-            onClick={() => onCategoryChange(cat.slug)}
+            onClick={() => selectCategory(cat.slug)}
           >
             {cat.name}
           </button>

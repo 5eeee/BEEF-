@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const SLIDES = [
   { word: "СОЧНЕЕ", tag: "Мраморная говядина · честные порции" },
-  { word: "МОЩНЕЕ", tag: "Двойная котлета и характер в каждом укусе" },
+  { word: "МОЩНЕЕ", tag: "Двойная котлета и характер" },
   { word: "БОЛЬШЕ", tag: "Бургеры с характером" },
 ] as const;
 
@@ -41,13 +41,16 @@ function renderWordPart(text: string, allowLogo: boolean) {
 
 const AUTO_MS = 5200;
 
+type Tilt = { x: number; y: number };
+
 export default function CinematicHero() {
   const ref = useRef<HTMLElement>(null);
   const [ready, setReady] = useState(false);
   const [slide, setSlide] = useState(0);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [mouse, setMouse] = useState<Tilt>({ x: 0, y: 0 });
   const [reduce, setReduce] = useState(false);
   const [scroll, setScroll] = useState(0);
+  const [compact, setCompact] = useState(false);
 
   const next = useCallback(() => setSlide((s) => (s + 1) % SLIDES.length), []);
 
@@ -57,17 +60,27 @@ export default function CinematicHero() {
   }, []);
 
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 900px)");
+    const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduce(mq.matches);
     if (mq.matches) return;
 
     let raf = 0;
-    let target = { x: 0, y: 0 };
+    let target: Tilt = { x: 0, y: 0 };
+    let usingGyro = false;
+    let gyroBound = false;
 
     const tick = () => {
       setMouse((prev) => {
-        const nx = prev.x + (target.x - prev.x) * 0.07;
-        const ny = prev.y + (target.y - prev.y) * 0.07;
+        const nx = prev.x + (target.x - prev.x) * 0.08;
+        const ny = prev.y + (target.y - prev.y) * 0.08;
         if (Math.abs(nx - prev.x) < 0.002 && Math.abs(ny - prev.y) < 0.002) return prev;
         return { x: nx, y: ny };
       });
@@ -75,12 +88,26 @@ export default function CinematicHero() {
     };
 
     const onMove = (e: MouseEvent) => {
+      if (usingGyro) return;
       const el = ref.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
       target = {
         x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
         y: ((e.clientY - rect.top) / rect.height - 0.5) * 2,
+      };
+    };
+
+    const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
+
+    const onOrientation = (e: DeviceOrientationEvent) => {
+      usingGyro = true;
+      // gamma: left/right (-90..90), beta: front/back (0..180 typical when holding phone)
+      const gamma = typeof e.gamma === "number" ? e.gamma : 0;
+      const beta = typeof e.beta === "number" ? e.beta : 45;
+      target = {
+        x: clamp(gamma / 28, -1.35, 1.35),
+        y: clamp((beta - 45) / 28, -1.35, 1.35),
       };
     };
 
@@ -91,14 +118,55 @@ export default function CinematicHero() {
       setScroll(Math.min(1, Math.max(0, -rect.top / Math.max(rect.height * 0.85, 1))));
     };
 
+    const enableGyro = async () => {
+      if (gyroBound) return;
+      gyroBound = true;
+      const DOE = DeviceOrientationEvent as unknown as {
+        requestPermission?: () => Promise<"granted" | "denied" | "default">;
+      };
+      try {
+        if (typeof DOE.requestPermission === "function") {
+          const permission = await DOE.requestPermission();
+          if (permission !== "granted") {
+            gyroBound = false;
+            return;
+          }
+        }
+        window.addEventListener("deviceorientation", onOrientation, { passive: true });
+      } catch {
+        gyroBound = false;
+      }
+    };
+
     raf = requestAnimationFrame(tick);
     onScroll();
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+
+    // Desktop: mouse. Mobile: gyroscope (iOS needs a user gesture for permission)
+    const isTouch = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+    if (isTouch) {
+      const DOE = DeviceOrientationEvent as unknown as {
+        requestPermission?: () => Promise<"granted" | "denied" | "default">;
+      };
+      if (typeof DOE.requestPermission !== "function") {
+        void enableGyro();
+      }
+    }
+
+    const onFirstTap = () => {
+      void enableGyro();
+    };
+    window.addEventListener("touchend", onFirstTap, { passive: true, once: true });
+    window.addEventListener("click", onFirstTap, { once: true });
+
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("deviceorientation", onOrientation);
+      window.removeEventListener("touchend", onFirstTap);
+      window.removeEventListener("click", onFirstTap);
     };
   }, []);
 
@@ -113,15 +181,15 @@ export default function CinematicHero() {
   const sc = reduce ? 0 : scroll;
   const textX = mx * -18 + sc * -24;
   const textY = my * -8 + sc * 18;
-  const burgerX = mx * 22;
-  const burgerY = my * 14 + sc * -12;
-  const burgerRot = mx * 2.5;
+  const burgerX = mx * (compact ? 36 : 22);
+  const burgerY = my * (compact ? 28 : 14) + sc * -12;
+  const burgerRot = mx * (compact ? 7 : 2.5) + my * (compact ? 3 : 0);
   const burgerScale = ready ? 1 : 0.72;
 
   return (
     <section
       ref={ref}
-      className={`cinema-hero ${ready ? "is-ready" : ""}`}
+      className={`cinema-hero ${ready ? "is-ready" : ""} ${compact ? "is-compact" : ""}`}
       aria-label="Главный экран"
     >
       <div className="cinema-hero__vignette" aria-hidden />
@@ -133,6 +201,16 @@ export default function CinematicHero() {
         aria-hidden
       >
         {SLIDES.map((s, i) => {
+          if (compact) {
+            return (
+              <div
+                key={s.word}
+                className={`cinema-hero__word cinema-hero__word--solid ${i === slide ? "is-active" : ""}`}
+              >
+                <span className="cinema-hero__word-full">{renderWordPart(s.word, true)}</span>
+              </div>
+            );
+          }
           const h = Math.ceil(s.word.length / 2);
           const left = s.word.slice(0, h);
           const right = s.word.slice(h);

@@ -29,14 +29,13 @@ export default function HomeClient() {
     setLoading(true);
     try {
       const params: Record<string, string> = { sort };
-      if (category) params.category = category;
       if (tags.length) params.tags = tags.join(",");
       const data = await fetchProducts(params);
       setProducts(data.items);
     } finally {
       setLoading(false);
     }
-  }, [category, tags, sort]);
+  }, [tags, sort]);
 
   useEffect(() => {
     fetchCategories().then(setCategories).catch(() => {});
@@ -66,6 +65,10 @@ export default function HomeClient() {
         if (detail?.id) setSelected(detail);
       })
       .catch(() => {});
+  }, []);
+
+  const handleCategoryChange = useCallback((slug: string | null) => {
+    setCategory(slug);
   }, []);
 
   const isDemo = process.env.NEXT_PUBLIC_DEMO === "1";
@@ -100,7 +103,7 @@ export default function HomeClient() {
               tags={tags}
               sort={sort}
               loading={loading}
-              onCategoryChange={setCategory}
+              onCategoryChange={handleCategoryChange}
               onTagToggle={toggleTag}
               onSortChange={setSort}
               onProductSelect={openProduct}

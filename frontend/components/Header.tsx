@@ -72,6 +72,22 @@ function IconPin() {
   );
 }
 
+function IconMenu({ open }: { open: boolean }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      {open ? (
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      ) : (
+        <>
+          <path d="M4 7h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M4 12h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export default function Header({
   onCartClick,
   transparent = false,
@@ -83,6 +99,7 @@ export default function Header({
   const [count, setCount] = useState(0);
   const { user, isLoggedIn, openLogin, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [address, setAddress] = useState(DEFAULT_ADDR);
   const [addrOpen, setAddrOpen] = useState(false);
@@ -136,6 +153,23 @@ export default function Header({
       window.removeEventListener("scroll", onScroll);
     };
   }, [transparent, variant]);
+
+  useEffect(() => {
+    setNavOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!navOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setNavOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [navOpen]);
 
   const isDark = theme === "dark";
   const inMenu = variant === "menu" || (variant === "auto" && progress > 0.5);
@@ -267,6 +301,18 @@ export default function Header({
         )}
 
         <div className={`header-actions ${inMenu ? "" : "header-actions--hero"}`}>
+          {!inMenu ? (
+            <button
+              type="button"
+              className="header-action header-action--nav"
+              aria-label={navOpen ? "Закрыть меню" : "Открыть меню"}
+              aria-expanded={navOpen}
+              onClick={() => setNavOpen((v) => !v)}
+            >
+              <IconMenu open={navOpen} />
+            </button>
+          ) : null}
+
           {isLoggedIn ? (
             <div className="relative">
               <button
@@ -328,6 +374,44 @@ export default function Header({
           </button>
         </div>
       </div>
+
+      {navOpen && !inMenu ? (
+        <div className="header-mobile-nav" role="dialog" aria-label="Навигация">
+          <button
+            type="button"
+            className="header-mobile-nav__backdrop"
+            aria-label="Закрыть"
+            onClick={() => setNavOpen(false)}
+          />
+          <nav className="header-mobile-nav__panel">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`header-mobile-nav__link ${navActive(item.href) ? "is-active" : ""}`}
+                onClick={() => setNavOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <a href="tel:+79160356777" className="header-mobile-nav__phone" onClick={() => setNavOpen(false)}>
+              +7 (916) 035-67-77
+            </a>
+            {pathname === "/" ? (
+              <button
+                type="button"
+                className="header-mobile-nav__menu"
+                onClick={() => {
+                  setNavOpen(false);
+                  document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+              >
+                К меню
+              </button>
+            ) : null}
+          </nav>
+        </div>
+      ) : null}
     </header>
   );
 }
