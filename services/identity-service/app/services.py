@@ -8,7 +8,7 @@ import redis.asyncio as aioredis
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth import create_access_token, decode_token
+from app.auth import create_access_token
 from app.config import settings
 from app.models import Address, OtpCode, RefreshToken, User
 from app.schemas import (

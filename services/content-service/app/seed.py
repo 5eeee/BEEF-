@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import func, select
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from app.config import settings
 from app.models import BlogPost, CompanyInfo, Review, SeoPage

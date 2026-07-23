@@ -1,7 +1,6 @@
 """Promotion Service — промокоды и акции."""
 
 from decimal import Decimal
-from uuid import UUID
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware

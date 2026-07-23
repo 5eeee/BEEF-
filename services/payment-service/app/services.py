@@ -1,6 +1,5 @@
 import json
 import logging
-from decimal import Decimal
 from uuid import UUID, uuid4
 
 import aio_pika
