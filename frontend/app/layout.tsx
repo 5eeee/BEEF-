@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import ClientProviders from "@/components/ClientProviders";
 import { localBusinessJsonLd, organizationJsonLd } from "@/lib/jsonld";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd()) }}
         />
         <ClientProviders>{children}</ClientProviders>
+        <SpeedInsights />
         <Script id="sw-register" strategy="afterInteractive">
           {`if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
