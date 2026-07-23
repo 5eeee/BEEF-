@@ -45,7 +45,6 @@ export default function AboutClient() {
         <section className="about-story" id="pro-nas" aria-labelledby="pro-nas-title">
           <div className="container-page about-story__grid">
             <div className="about-story__intro">
-              <p className="about-section__eyebrow">{about.proNas.title}</p>
               <h2 id="pro-nas-title" className="about-section__title">
                 Бургерная, в которую заходят как к своим
               </h2>
@@ -59,13 +58,13 @@ export default function AboutClient() {
             <figure className="about-story__media about-story__media--process">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/about/kitchen-smash-burger.png"
-                alt="Смэш-бургер готовят на раскалённом гриле"
+                src="/images/about/restaurant-pass.png"
+                alt="Повар BEEFштекс собирает бургер на кухне"
                 loading="eager"
               />
               <figcaption>
                 <span>Кухня BEEFштекс</span>
-                <strong>Жарим смэш на заказ</strong>
+                <strong>Собираем каждый бургер на заказ</strong>
               </figcaption>
             </figure>
           </div>
@@ -93,7 +92,6 @@ export default function AboutClient() {
                 <img src="/images/about/ingredients-brioche.png" alt="Мраморная говядина, бриошь и свежие ингредиенты для бургера" loading="lazy" />
               </div>
               <div className="about-beef__card">
-                <p className="about-section__eyebrow">{about.proBeef.title}</p>
                 <h2 id="pro-beef-title" className="about-section__title">
                   Вкус начинается с честного выбора
                 </h2>
@@ -103,7 +101,6 @@ export default function AboutClient() {
 
             <div className="about-beef__detail">
               <div className="about-beef__question">
-                <p className="about-section__eyebrow">Основа каждого бургера</p>
                 <h3>{about.proBeef.question}</h3>
               </div>
               <div className="about-beef__answer">
@@ -125,25 +122,21 @@ export default function AboutClient() {
 
           <div className="about-beef__banner">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/about/kitchen-smash-burger.png" alt="Смэш-бургер готовят на гриле" loading="lazy" />
+            <img src="/images/about/plated-signature-burger.png" alt="Фирменный бургер BEEFштекс на тарелке" loading="lazy" />
             <div className="about-beef__banner-shade" />
             <div className="container-page about-beef__banner-content">
-              <p>От мраморной говядины — до горячего гриля</p>
-              <span>Без случайных ингредиентов</span>
+              <p>От мраморной говядины — до горячего бургера</p>
+              <span>Собираем и жарим в момент заказа</span>
             </div>
           </div>
 
           <div className="container-page about-beef__notes">
             <div>
-              <p className="about-section__eyebrow">Происхождение и вкус</p>
+              <h3 className="about-beef__note-title">О мраморной говядине</h3>
               <p>{about.proBeef.breeds}</p>
             </div>
-            <div className="about-beef__menu-shot">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/about/photo-2.jpg" alt="Ферма — источник качественной говядины" loading="lazy" />
-            </div>
             <div>
-              <p className="about-section__eyebrow">Как готовим</p>
+              <h3 className="about-beef__note-title">Как готовим</h3>
               <p>{about.proBeef.doneness}</p>
             </div>
           </div>
@@ -172,12 +165,20 @@ export default function AboutClient() {
                 <strong>Самовывоз:</strong> {about.delivery.pickup}
               </p>
             </div>
+            <figure className="about-delivery-map">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/about/delivery-zones-map.png" alt="Карта зон доставки BEEFштекс по Коломне" loading="lazy" />
+              <figcaption>
+                <strong>Карта зон доставки</strong>
+                <span>Проверьте свой район перед оформлением заказа.</span>
+                <a href={`tel:${tel}`}>Уточнить зону по телефону</a>
+              </figcaption>
+            </figure>
           </div>
         </section>
 
         <section className="about-contact" id="contacts" aria-labelledby="contacts-title">
           <div className="container-page about-contact__inner">
-            <p className="about-section__eyebrow">Контакты</p>
             <h2 id="contacts-title" className="about-section__title">
               Залетай к нам
             </h2>

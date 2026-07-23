@@ -2637,7 +2637,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-hero__eyebrow,
 .about-section__eyebrow {
   margin: 0 0 0.9rem;
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--beef-accent);
@@ -2664,7 +2664,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-hero__belief {
   margin: 0.65rem 0 0;
   color: rgba(255, 255, 255, 0.82);
-  font-size: 0.98rem;
+  font-size: clamp(1.08rem, 1.4vw, 1.28rem);
   font-weight: 600;
   line-height: 1.45;
 }
@@ -2694,7 +2694,7 @@ html[data-past-menu="1"] .home-first-screen {
   border-radius: 999px;
   background: #fff;
   color: #101010;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 800;
   text-decoration: none;
   transition: transform 0.2s ease, background-color 0.2s ease;
@@ -2756,7 +2756,7 @@ html[data-past-menu="1"] .home-first-screen {
   gap: 1.2rem;
   max-width: 42rem;
   color: var(--about-copy);
-  font-size: clamp(1.05rem, 1.35vw, 1.18rem);
+  font-size: clamp(1.12rem, 1.5vw, 1.3rem);
   line-height: 1.72;
 }
 
@@ -2915,7 +2915,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-beef__card p:last-child {
   margin: 1.25rem 0 0;
   color: rgba(16, 16, 16, 0.72);
-  font-size: 1.08rem;
+  font-size: clamp(1.12rem, 1.45vw, 1.3rem);
   line-height: 1.65;
 }
 
@@ -2940,7 +2940,7 @@ html[data-past-menu="1"] .home-first-screen {
   gap: 1rem;
   max-width: 38rem;
   color: var(--about-copy);
-  font-size: clamp(1.05rem, 1.3vw, 1.16rem);
+  font-size: clamp(1.12rem, 1.45vw, 1.28rem);
   line-height: 1.72;
 }
 
@@ -2975,7 +2975,7 @@ html[data-past-menu="1"] .home-first-screen {
 
 .about-point h3 {
   margin: 0 0 0.55rem;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 
@@ -2983,7 +2983,7 @@ html[data-past-menu="1"] .home-first-screen {
   max-width: 18rem;
   margin: 0;
   color: var(--about-copy);
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.65;
 }
 
@@ -3051,8 +3051,16 @@ html[data-past-menu="1"] .home-first-screen {
 .about-beef__notes > div:not(.about-beef__menu-shot) {
   max-width: 32rem;
   color: var(--about-copy);
-  font-size: 1.05rem;
+  font-size: 1.14rem;
   line-height: 1.7;
+}
+
+.about-beef__note-title {
+  margin: 0 0 0.75rem;
+  color: inherit;
+  font-size: 1.35rem;
+  font-weight: 750;
+  line-height: 1.15;
 }
 
 .about-beef__notes > div > p:last-child {
@@ -3091,7 +3099,7 @@ html[data-past-menu="1"] .home-first-screen {
   max-width: 38rem;
   margin: 1.5rem 0 0;
   color: var(--about-copy);
-  font-size: 1.05rem;
+  font-size: 1.14rem;
   line-height: 1.72;
 }
 
@@ -3105,7 +3113,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-visit__panel > p {
   margin: 1.25rem 0 0;
   color: var(--about-copy);
-  font-size: 1rem;
+  font-size: 1.08rem;
   line-height: 1.65;
 }
 
@@ -3122,7 +3130,7 @@ html[data-past-menu="1"] .home-first-screen {
   padding: 0.85rem 0;
   border-bottom: 1px solid var(--about-line);
   color: rgba(255, 255, 255, 0.72);
-  font-size: 1rem;
+  font-size: 1.08rem;
 }
 
 .about-zones li:first-child {
@@ -3135,6 +3143,51 @@ html[data-past-menu="1"] .home-first-screen {
   white-space: nowrap;
 }
 
+.about-delivery-map {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--about-line);
+  border-radius: var(--about-radius-lg);
+  background: var(--about-panel);
+}
+
+.about-delivery-map img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #000;
+}
+
+.about-delivery-map figcaption {
+  display: grid;
+  gap: 0.45rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.about-delivery-map strong {
+  font-size: clamp(1.3rem, 2.2vw, 1.65rem);
+  line-height: 1.15;
+}
+
+.about-delivery-map span {
+  color: var(--about-copy);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.about-delivery-map a {
+  justify-self: start;
+  margin-top: 0.35rem;
+  color: var(--beef-accent);
+  font-size: 1.02rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.about-delivery-map a:hover {
+  text-decoration: underline;
+}
+
 .about-contact {
   padding: clamp(4.5rem, 9vw, 8rem) 0;
   background: var(--beef-accent);
@@ -3142,7 +3195,15 @@ html[data-past-menu="1"] .home-first-screen {
 }
 
 .about-contact__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+}
+
+.about-contact .about-section__title {
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .about-contact .about-section__eyebrow {
@@ -3152,7 +3213,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-contacts__hours {
   margin: 1.25rem 0 0;
   color: rgba(13, 13, 13, 0.64);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   line-height: 1.55;
 }
 
@@ -3171,7 +3232,7 @@ html[data-past-menu="1"] .home-first-screen {
   margin: 0.45rem auto 0;
   color: rgba(13, 13, 13, 0.7);
   line-height: 1.55;
-  font-size: 1.05rem;
+  font-size: 1.14rem;
 }
 
 .about-social {
@@ -3200,6 +3261,12 @@ html[data-past-menu="1"] .home-first-screen {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+.about-contact .about-social,
+.about-contact .about-hero__actions {
+  align-items: center;
+  justify-content: center;
 }
 
 .about-social--icons img {
@@ -3276,6 +3343,10 @@ html[data-past-menu="1"] .home-first-screen {
   .about-visit__grid {
     grid-template-columns: minmax(0, 1.08fr) minmax(18rem, 0.75fr);
     gap: clamp(3rem, 8vw, 9rem);
+  }
+
+  .about-delivery-map {
+    grid-column: 1 / -1;
   }
 }
 
