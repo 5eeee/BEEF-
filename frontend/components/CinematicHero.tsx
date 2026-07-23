@@ -125,6 +125,7 @@ export default function CinematicHero() {
 
     const enableGyro = async () => {
       if (gyroBound) return;
+      if (typeof DeviceOrientationEvent === "undefined") return;
       gyroBound = true;
       const DOE = DeviceOrientationEvent as unknown as {
         requestPermission?: () => Promise<"granted" | "denied" | "default">;
@@ -149,7 +150,7 @@ export default function CinematicHero() {
     window.addEventListener("scroll", onScroll, { passive: true });
 
     const isTouch = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
-    if (isTouch) {
+    if (isTouch && typeof DeviceOrientationEvent !== "undefined") {
       const DOE = DeviceOrientationEvent as unknown as {
         requestPermission?: () => Promise<"granted" | "denied" | "default">;
       };
