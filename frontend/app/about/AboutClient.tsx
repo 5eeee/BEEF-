@@ -175,12 +175,21 @@ export default function AboutClient() {
               </p>
             </div>
             <figure className="about-delivery-map">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/about/delivery-zones-map.png" alt="Карта зон доставки BEEFштекс по Коломне" loading="lazy" />
+              <iframe
+                className="about-delivery-map__frame"
+                title="Карта доставки BEEFштекс — Коломна"
+                src="https://yandex.ru/map-widget/v1/?ll=38.800483%2C55.084059&z=12&ol=biz&oid=24908451928"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
               <figcaption>
-                <strong>Карта зон доставки</strong>
-                <span>Проверьте свой район перед оформлением заказа.</span>
-                <a href={`tel:${tel}`}>Уточнить зону по телефону</a>
+                <strong>Карта доставки</strong>
+                <span>
+                  Ресторан в ТРЦ Рио. Зоны и цены — в списке слева; перед заказом уточняйте район по
+                  телефону.
+                </span>
+                <a href={`tel:${tel}`}>Уточнить зону · +7 (916) 035-67-77</a>
               </figcaption>
             </figure>
           </div>

@@ -10,28 +10,12 @@ const SOCIAL = [
   { href: "https://www.instagram.com/beefshteks_burgers/", label: "Instagram", id: "ig", icon: "/images/social/instagram.svg" },
 ] as const;
 
-function renderWordPart(text: string, allowLogo: boolean) {
-  let usedLogo = !allowLogo;
-  return text.split("").map((ch, i) => {
-    if (!usedLogo && (ch === "О" || ch === "о" || ch === "O" || ch === "o")) {
-      usedLogo = true;
-      return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={`${ch}-${i}`}
-          src="/images/brand/logo-mark.png"
-          alt=""
-          className="cinema-hero__word-logo"
-          draggable={false}
-        />
-      );
-    }
-    return (
-      <span key={`${ch}-${i}`} className="cinema-hero__word-ch">
-        {ch}
-      </span>
-    );
-  });
+function renderWordPart(text: string) {
+  return text.split("").map((ch, i) => (
+    <span key={`${ch}-${i}`} className="cinema-hero__word-ch">
+      {ch}
+    </span>
+  ));
 }
 
 const AUTO_MS = 5200;
@@ -215,22 +199,21 @@ export default function CinematicHero() {
                 key={`${s.word}-${i}`}
                 className={`cinema-hero__word cinema-hero__word--solid ${i === slide ? "is-active" : ""}`}
               >
-                <span className="cinema-hero__word-full">{renderWordPart(s.word, true)}</span>
+                <span className="cinema-hero__word-full">{renderWordPart(s.word)}</span>
               </div>
             );
           }
           const h = Math.ceil(s.word.length / 2);
           const left = s.word.slice(0, h);
           const right = s.word.slice(h);
-          const logoInLeft = /[ОоOo]/.test(left);
           return (
             <div
               key={`${s.word}-${i}`}
               className={`cinema-hero__word ${i === slide ? "is-active" : ""}`}
             >
-              <span className="cinema-hero__word-left">{renderWordPart(left, true)}</span>
+              <span className="cinema-hero__word-left">{renderWordPart(left)}</span>
               <span className="cinema-hero__word-gap" />
-              <span className="cinema-hero__word-right">{renderWordPart(right, !logoInLeft)}</span>
+              <span className="cinema-hero__word-right">{renderWordPart(right)}</span>
             </div>
           );
         })}
@@ -243,6 +226,14 @@ export default function CinematicHero() {
           transform: `translate(calc(-50% + ${burgerX}px), calc(-50% + ${burgerY}px)) rotate(${burgerRot}deg) scale(${burgerScale})`,
         }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/brand/logo-mark.png"
+          alt=""
+          className="cinema-hero__burger-logo"
+          aria-hidden
+          draggable={false}
+        />
         <div className="cinema-hero__burger-shadow" aria-hidden />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
