@@ -1,0 +1,313 @@
+x-common-env: &common-env
+  POSTGRES_USER: ${POSTGRES_USER:-beefshteks}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+  REDIS_URL: redis://redis:6379/0
+  RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+
+services:
+  # ─── Infrastructure ───────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-beefshteks}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init-databases.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U beefshteks"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      retries: 5
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.6
+    environment:
+      MEILI_MASTER_KEY: ${MEILISEARCH_KEY:-masterKey}
+    ports:
+      - "7700:7700"
+    volumes:
+      - meili_data:/meili_data
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.54
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+
+  # ─── API Gateway (Nginx) ──────────────────────────────────────
+  # Traefik Docker provider fails on Windows/WSL2 socket — use static nginx routing
+  gateway:
+    image: nginx:1.27-alpine
+    ports:
+      - "8000:80"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - catalog-service
+      - order-service
+      - identity-service
+      - payment-service
+      - delivery-service
+      - content-service
+      - promotion-service
+
+  # ─── Microservices ────────────────────────────────────────────
+  catalog-service:
+    build:
+      context: .
+      dockerfile: services/catalog-service/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/catalog_db
+      MEILISEARCH_URL: http://meilisearch:7700
+      MEILISEARCH_KEY: ${MEILISEARCH_KEY:-masterKey}
+      MEDIA_SERVICE_URL: http://media-service:8010
+      PUBLIC_API_URL: http://localhost:8000
+      ADMIN_IMPORT_KEY: ${ADMIN_IMPORT_KEY:-dev-import-key}
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.catalog.rule=PathPrefix(`/api/v1/categories`) || PathPrefix(`/api/v1/products`) || PathPrefix(`/api/v1/search`) || PathPrefix(`/api/v1/admin`)"
+      - "traefik.http.services.catalog.loadbalancer.server.port=8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      meilisearch:
+        condition: service_started
+      media-service:
+        condition: service_started
+
+  identity-service:
+    build:
+      context: .
+      dockerfile: services/identity-service/Dockerfile
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/identity_db
+      REDIS_URL: redis://redis:6379/2
+      JWT_SECRET: ${JWT_SECRET:-dev-secret}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      DEBUG: "true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.identity.rule=PathPrefix(`/api/v1/auth`) || PathPrefix(`/api/v1/users`)"
+      - "traefik.http.services.identity.loadbalancer.server.port=8002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  order-service:
+    build:
+      context: .
+      dockerfile: services/order-service/Dockerfile
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/order_db
+      REDIS_URL: redis://redis:6379/1
+      CATALOG_SERVICE_URL: http://catalog-service:8001
+      PROMOTION_SERVICE_URL: http://promotion-service:8008
+      DELIVERY_SERVICE_URL: http://delivery-service:8006
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.order.rule=PathPrefix(`/api/v1/cart`) || PathPrefix(`/api/v1/orders`) || PathPrefix(`/api/v1/admin/orders`) || PathPrefix(`/api/v1/admin/stats`)"
+      - "traefik.http.services.order.loadbalancer.server.port=8003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      catalog-service:
+        condition: service_started
+      promotion-service:
+        condition: service_started
+      delivery-service:
+        condition: service_started
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: services/payment-service/Dockerfile
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/payment_db
+      PAYMENT_GATEWAY_SECRET: ${PAYMENT_GATEWAY_SECRET:-dev-secret}
+      AUTO_COMPLETE_PAYMENTS: "true"
+      BASE_URL: http://localhost:8000
+      DEBUG: "true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.payment.rule=PathPrefix(`/api/v1/payments`)"
+      - "traefik.http.services.payment.loadbalancer.server.port=8004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/notification_db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.notification.rule=PathPrefix(`/api/v1/notifications`)"
+      - "traefik.http.services.notification.loadbalancer.server.port=8005"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  delivery-service:
+    build:
+      context: .
+      dockerfile: services/delivery-service/Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379/3
+      DADATA_API_KEY: ${DADATA_API_KEY:-}
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.delivery.rule=PathPrefix(`/api/v1/delivery`)"
+      - "traefik.http.services.delivery.loadbalancer.server.port=8006"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  content-service:
+    build:
+      context: .
+      dockerfile: services/content-service/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/content_db
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.content.rule=PathPrefix(`/api/v1/reviews`) || PathPrefix(`/api/v1/blog`) || PathPrefix(`/api/v1/pages`) || PathPrefix(`/api/v1/company`) || PathPrefix(`/api/v1/admin/reviews`)"
+      - "traefik.http.services.content.loadbalancer.server.port=8007"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  promotion-service:
+    build:
+      context: .
+      dockerfile: services/promotion-service/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/promotion_db
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.promotion.rule=PathPrefix(`/api/v1/promo`) || PathPrefix(`/api/v1/admin/promo`)"
+      - "traefik.http.services.promotion.loadbalancer.server.port=8008"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+        API_PROXY_URL: http://gateway
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      API_PROXY_URL: http://gateway
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+    depends_on:
+      - gateway
+      - catalog-service
+      - order-service
+
+  integration-service:
+    build:
+      context: .
+      dockerfile: services/integration-service/Dockerfile
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/integration_db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.integration.rule=PathPrefix(`/api/v1/integration`)"
+      - "traefik.http.services.integration.loadbalancer.server.port=8009"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  media-service:
+    build:
+      context: .
+      dockerfile: services/media-service/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beefshteks:changeme@postgres:5432/media_db
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      S3_BUCKET: beefshteks-media
+      PUBLIC_BASE_URL: http://localhost:8000
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      DEBUG: "true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.media.rule=PathPrefix(`/api/v1/media`)"
+      - "traefik.http.services.media.loadbalancer.server.port=8010"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  meili_data:
+  minio_data:

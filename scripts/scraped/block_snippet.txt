@@ -1,0 +1,23 @@
+﻿"0px 2px 3px rgba(0,11,48,0.25)"> <div
+class="t-menu-base__maincontainer
+t-menu-base__maincontainer_100 t-menu-base__maincontainer_100-20 t-menu-base__maincontainer_logoleft "> <div class="t-menu-base__leftwrapper t-menu-base__wrapper t-menu-base__leftwrapper_center t-menu-base__leftwrapper_nologo" style=""> <ul role="list" class="t-menu-base__list t-menu__list "> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1860629771" data-menu-item-number="1">#BEEF Р‘СѓСЂРіРµСЂС‹</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1248845236" data-menu-item-number="2">РЎРјСЌС€ Р‘СѓСЂРіРµСЂС‹</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1021699076" data-menu-item-number="3">РЎС‚Р°СЂС‚РµСЂС‹</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1860343881" data-menu-item-number="4">Р—Р°РІС‚СЂР°Рє</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1860568361" data-menu-item-number="5">РЎС‚СЂРёС‚ Р‘РѕРєСЃ</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1235630186" data-menu-item-number="6">РљРѕРјР±Рѕ</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1235642261" data-menu-item-number="7">РЎР°Р»Р°С‚С‹</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1239280526" data-menu-item-number="8">РќР°РїРёС‚РєРё</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="#rec1239277936" data-menu-item-number="9">РЎРѕСѓСЃС‹</a> </div> </li> <li class="t-menu-base__list-item"> <div
+class="t-menu__link-wrapper" data-menu-submenu-hook=""> <a class="t-menu__link-item"
+href="" data-menu-item-number="10">РЎРїРµС†РїСЂРµРґР»РѕР¶РµРЅРёРµ</a> </div> </li> </ul> </div> </div> </div> </div> <script>t_onReady(functi

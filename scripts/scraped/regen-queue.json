@@ -1,0 +1,464 @@
+[
+  {
+    "name": "Бургер Техас",
+    "slug": "burger-tehas-617041",
+    "file": "burger-tehas-617041.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Бургер BBQ Джексон",
+    "slug": "burger-bbq-dzhekson-505452",
+    "file": "burger-bbq-dzhekson-505452.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Бургер Конг",
+    "slug": "burger-kong-651612",
+    "file": "burger-kong-651612.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "#BEEF Чизбургер",
+    "slug": "beef-chizburger-778941",
+    "file": "beef-chizburger-778941.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Бургер Сырное ранчо",
+    "slug": "burger-syrnoe-rancho-145231",
+    "file": "burger-syrnoe-rancho-145231.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "#BEEF Дабл Чизбургер",
+    "slug": "beef-dabl-chizburger-601741",
+    "file": "beef-dabl-chizburger-601741.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Вишневый БелБургер",
+    "slug": "vishnevyy-belburger-572462",
+    "file": "vishnevyy-belburger-572462.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Бургер Blue Cheese",
+    "slug": "burger-blue-cheese-861801",
+    "file": "burger-blue-cheese-861801.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Бургер Шреддер",
+    "slug": "burger-shredder-095962",
+    "file": "burger-shredder-095962.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Кинг Конг",
+    "slug": "king-kong-332312",
+    "file": "king-kong-332312.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Бургер Мексиканец",
+    "slug": "burger-meksikanets-306231",
+    "file": "burger-meksikanets-306231.png",
+    "exists": true,
+    "category": "beef-burgers"
+  },
+  {
+    "name": "Смэш Брусничный - S",
+    "slug": "smesh-brusnichnyy-s-557931",
+    "file": "smesh-brusnichnyy-s-557931.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Брусничный - M",
+    "slug": "smesh-brusnichnyy-m-970751",
+    "file": "smesh-brusnichnyy-m-970751.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Брусничный - L",
+    "slug": "smesh-brusnichnyy-l-070792",
+    "file": "smesh-brusnichnyy-l-070792.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Огайо - S",
+    "slug": "smesh-ogayo-s-363501",
+    "file": "smesh-ogayo-s-363501.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Огайо - M",
+    "slug": "smesh-ogayo-m-675902",
+    "file": "smesh-ogayo-m-675902.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Огайо - L",
+    "slug": "smesh-ogayo-l-426582",
+    "file": "smesh-ogayo-l-426582.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Трюфельный - S",
+    "slug": "smesh-tryufelnyy-s-718362",
+    "file": "smesh-tryufelnyy-s-718362.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Трюфельный - M",
+    "slug": "smesh-tryufelnyy-m-033932",
+    "file": "smesh-tryufelnyy-m-033932.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Трюфельный - L",
+    "slug": "smesh-tryufelnyy-l-107502",
+    "file": "smesh-tryufelnyy-l-107502.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Чизбургер - S",
+    "slug": "smesh-chizburger-s-686612",
+    "file": "smesh-chizburger-s-686612.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Чизбургер - M",
+    "slug": "smesh-chizburger-m-550272",
+    "file": "smesh-chizburger-m-550272.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Смэш Чизбургер - L",
+    "slug": "smesh-chizburger-l-597932",
+    "file": "smesh-chizburger-l-597932.png",
+    "exists": true,
+    "category": "smash-burgers"
+  },
+  {
+    "name": "Батат фри",
+    "slug": "batat-fri-626262",
+    "file": "batat-fri-626262.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Картошка \"Деревня\"",
+    "slug": "kartoshka-derevnya-045981",
+    "file": "kartoshka-derevnya-045981.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Картошка фри",
+    "slug": "kartoshka-fri-221421",
+    "file": "kartoshka-fri-221421.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Картошка фри с пармезаном и чесноком",
+    "slug": "kartoshka-fri-s-parmezanom-i-chesnokom-095101",
+    "file": "kartoshka-fri-s-parmezanom-i-chesnokom-095101.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Креветки жареные во фритюре",
+    "slug": "krevetki-zharenye-vo-frityure-589402",
+    "file": "krevetki-zharenye-vo-frityure-589402.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Кольца Кальмара",
+    "slug": "koltsa-kalmara-795502",
+    "file": "koltsa-kalmara-795502.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Наггетсы",
+    "slug": "naggetsy-272071",
+    "file": "naggetsy-272071.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Куриные Крылышки",
+    "slug": "kurinye-krylyshki-838551",
+    "file": "kurinye-krylyshki-838551.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Сырные палочки 5шт",
+    "slug": "syrnye-palochki-5sht-764501",
+    "file": "syrnye-palochki-5sht-764501.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Куриные Стрипсы 3 шт",
+    "slug": "kurinye-stripsy-3-sht-386671",
+    "file": "kurinye-stripsy-3-sht-386671.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Луковые кольца 5/8 шт",
+    "slug": "lukovye-koltsa-5-8-sht-497492",
+    "file": "lukovye-koltsa-5-8-sht-497492.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Картофельный Хешбраун",
+    "slug": "kartofelnyy-heshbraun-008222",
+    "file": "kartofelnyy-heshbraun-008222.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Сырные Монетки с халапеньо 5 шт.",
+    "slug": "syrnye-monetki-s-halapeno-5-sht-040762",
+    "file": "syrnye-monetki-s-halapeno-5-sht-040762.png",
+    "exists": true,
+    "category": "starters"
+  },
+  {
+    "name": "Завтрак классический",
+    "slug": "zavtrak-klassicheskiy-991552",
+    "file": "zavtrak-klassicheskiy-991552.png",
+    "exists": true,
+    "category": "breakfast"
+  },
+  {
+    "name": "Скрембл омлет с картошкой фри и маффином с сыром",
+    "slug": "skrembl-omlet-s-kartoshkoy-fri-i-maffinom-s-syrom-840512",
+    "file": "skrembl-omlet-s-kartoshkoy-fri-i-maffinom-s-syrom-840512.png",
+    "exists": true,
+    "category": "breakfast"
+  },
+  {
+    "name": "Скрембл омлет с пармезаном",
+    "slug": "skrembl-omlet-s-parmezanom-473972",
+    "file": "skrembl-omlet-s-parmezanom-473972.png",
+    "exists": true,
+    "category": "breakfast"
+  },
+  {
+    "name": "Английский маффин с беконом",
+    "slug": "angliyskiy-maffin-s-bekonom-112062",
+    "file": "angliyskiy-maffin-s-bekonom-112062.png",
+    "exists": true,
+    "category": "breakfast"
+  },
+  {
+    "name": "Английский маффин с яйцом",
+    "slug": "angliyskiy-maffin-s-yaytsom-017732",
+    "file": "angliyskiy-maffin-s-yaytsom-017732.png",
+    "exists": true,
+    "category": "breakfast"
+  },
+  {
+    "name": "Английский маффин с сыром",
+    "slug": "angliyskiy-maffin-s-syrom-427262",
+    "file": "angliyskiy-maffin-s-syrom-427262.png",
+    "exists": true,
+    "category": "breakfast"
+  },
+  {
+    "name": "Яичница с беконом и хешбрауном",
+    "slug": "yaichnitsa-s-bekonom-i-heshbraunom-098852",
+    "file": "yaichnitsa-s-bekonom-i-heshbraunom-098852.png",
+    "exists": true,
+    "category": "breakfast"
+  },
+  {
+    "name": "Стрит бокс BBQ",
+    "slug": "strit-boks-bbq-720252",
+    "file": "strit-boks-bbq-720252.png",
+    "exists": true,
+    "category": "street-box"
+  },
+  {
+    "name": "Стрит Бокс Чизбургер",
+    "slug": "strit-boks-chizburger-896602",
+    "file": "strit-boks-chizburger-896602.png",
+    "exists": true,
+    "category": "street-box"
+  },
+  {
+    "name": "Куриный Бокс",
+    "slug": "kurinyy-boks-034612",
+    "file": "kurinyy-boks-034612.png",
+    "exists": true,
+    "category": "street-box"
+  },
+  {
+    "name": "Дуо BEEF Чизбургер комбо",
+    "slug": "duo-beef-chizburger-kombo-158491",
+    "file": "duo-beef-chizburger-kombo-158491.png",
+    "exists": true,
+    "category": "combos"
+  },
+  {
+    "name": "Комбо для двоих",
+    "slug": "kombo-dlya-dvoih-842831",
+    "file": "kombo-dlya-dvoih-842831.png",
+    "exists": true,
+    "category": "combos"
+  },
+  {
+    "name": "Комбо Техас",
+    "slug": "kombo-tehas-434492",
+    "file": "kombo-tehas-434492.png",
+    "exists": true,
+    "category": "combos"
+  },
+  {
+    "name": "Комбо Конг",
+    "slug": "kombo-kong-365512",
+    "file": "kombo-kong-365512.png",
+    "exists": true,
+    "category": "combos"
+  },
+  {
+    "name": "Салат Цезарь",
+    "slug": "salat-tsezar-124971",
+    "file": "salat-tsezar-124971.png",
+    "exists": true,
+    "category": "salads"
+  },
+  {
+    "name": "Салат Коул-Слоу",
+    "slug": "salat-koul-slou-910422",
+    "file": "salat-koul-slou-910422.png",
+    "exists": true,
+    "category": "salads"
+  },
+  {
+    "name": "Coca-Cola",
+    "slug": "coca-cola-907171",
+    "file": "coca-cola-907171.png",
+    "exists": true,
+    "category": "drinks"
+  },
+  {
+    "name": "Dr Pepper",
+    "slug": "dr-pepper-225971",
+    "file": "dr-pepper-225971.png",
+    "exists": true,
+    "category": "drinks"
+  },
+  {
+    "name": "Coca-Cola Classic 0,33 стекло",
+    "slug": "coca-cola-classic-0-33-steklo-993482",
+    "file": "coca-cola-classic-0-33-steklo-993482.png",
+    "exists": true,
+    "category": "drinks"
+  },
+  {
+    "name": "Сок РИЧ Апельсин",
+    "slug": "sok-rich-apelsin-256982",
+    "file": "sok-rich-apelsin-256982.png",
+    "exists": true,
+    "category": "drinks"
+  },
+  {
+    "name": "Сок РИЧ Вишня",
+    "slug": "sok-rich-vishnya-885112",
+    "file": "sok-rich-vishnya-885112.png",
+    "exists": true,
+    "category": "drinks"
+  },
+  {
+    "name": "Соус сырный Heinz",
+    "slug": "sous-syrnyy-heinz-478431",
+    "file": "sous-syrnyy-heinz-478431.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Соус кисло - сладкий Heinz",
+    "slug": "sous-kislo-sladkiy-heinz-941641",
+    "file": "sous-kislo-sladkiy-heinz-941641.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Соус Пармеджано Heinz",
+    "slug": "sous-parmedzhano-heinz-875112",
+    "file": "sous-parmedzhano-heinz-875112.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Соус чесночный BEEF",
+    "slug": "sous-chesnochnyy-beef-974522",
+    "file": "sous-chesnochnyy-beef-974522.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Сырный соус BEEF",
+    "slug": "syrnyy-sous-beef-045012",
+    "file": "syrnyy-sous-beef-045012.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Соус перечный BEEF",
+    "slug": "sous-perechnyy-beef-066212",
+    "file": "sous-perechnyy-beef-066212.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Соус брусничный BEEF",
+    "slug": "sous-brusnichnyy-beef-918272",
+    "file": "sous-brusnichnyy-beef-918272.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Соус Томатный",
+    "slug": "sous-tomatnyy-808972",
+    "file": "sous-tomatnyy-808972.png",
+    "exists": true,
+    "category": "sauces"
+  },
+  {
+    "name": "Соус 1000 островов BEEF",
+    "slug": "sous-1000-ostrovov-beef-608442",
+    "file": "sous-1000-ostrovov-beef-608442.png",
+    "exists": true,
+    "category": "sauces"
+  }
+]

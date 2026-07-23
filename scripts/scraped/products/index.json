@@ -1,0 +1,65 @@
+﻿[
+    {
+        "name":  "#BEEF Бургеры",
+        "uid":  "273230150151",
+        "recid":  "1860629771",
+        "len":  11869,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\273230150151.json"
+    },
+    {
+        "name":  "Смэш Бургеры",
+        "uid":  "374241014681",
+        "recid":  "1248845236",
+        "len":  13770,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\374241014681.json"
+    },
+    {
+        "name":  "Стартеры",
+        "uid":  "143993504411",
+        "recid":  "1021699076",
+        "len":  13407,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\143993504411.json"
+    },
+    {
+        "name":  "Завтрак",
+        "uid":  "167282033492",
+        "recid":  "1860343881",
+        "len":  7773,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\167282033492.json"
+    },
+    {
+        "name":  "Стрит Бокс",
+        "uid":  "565917195392",
+        "recid":  "1860568361",
+        "len":  3545,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\565917195392.json"
+    },
+    {
+        "name":  "Комбо",
+        "uid":  "196341549311",
+        "recid":  "1235630186",
+        "len":  4360,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\196341549311.json"
+    },
+    {
+        "name":  "Салаты",
+        "uid":  "304616679251",
+        "recid":  "1235642261",
+        "len":  2585,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\304616679251.json"
+    },
+    {
+        "name":  "Напитки",
+        "uid":  "737660085771",
+        "recid":  "1239280526",
+        "len":  4454,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\737660085771.json"
+    },
+    {
+        "name":  "Соусы",
+        "uid":  "221454259401",
+        "recid":  "1239277936",
+        "len":  7725,
+        "path":  "c:\\beefshteks (new)\\scripts\\scraped\\products\\221454259401.json"
+    }
+]

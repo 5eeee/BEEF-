@@ -1,0 +1,110 @@
+{
+  "source": "https://beefshteks.ru/",
+  "scrapedAt": "2026-07-23T03:35:59.831Z",
+  "brand": "BEEFштекс",
+  "slogan": "Бургеры с характером!",
+  "belief": "Мы верим в мясо",
+  "sections": [
+    {
+      "recId": "1034877696",
+      "texts": [
+        "Залетай к нам с 10:00 до 22:00 — каждый день, без выходных!\n📱 +7 (916) 035-67-77\nАдрес: Коломна, ул. Октябрьской Революции, 362, ТРЦ Рио, фудкорт"
+      ],
+      "images": []
+    },
+    {
+      "recId": "1857139151",
+      "texts": [
+        "Заказать #rec1857139151 .t-btnflex.t-btnflex_type_button {color:#ffffff;background-color:#000000;border-style:solid !important;border-color:#ffffff !important;--border-width:1px;box-shadow:none !important;transition-duration:0.2s;transition-property:background-color,color,border-color,box-shadow,opacity,transform,gap;transition-timing-function:ease-in-out;}",
+        "Адрес доставки",
+        "Комментарий к заказу",
+        ".t-inputpromocode__wrapper .t-text{color:#000;} Activate",
+        "Заказать #rec1857139151 .t-btnflex.t-btnflex_type_submit {color:#ffffff;background-color:#000000;border-style:solid !important;border-color:#ffffff !important;--border-width:1px;box-shadow:none !important;transition-duration:0.2s;transition-property:background-color,color,border-color,box-shadow,opacity,transform,gap;transition-timing-function:ease-in-out;}"
+      ],
+      "images": []
+    },
+    {
+      "recId": "659583217",
+      "texts": [
+        "© Все права защищены"
+      ],
+      "images": []
+    }
+  ],
+  "contacts": {
+    "phone": "+7 (916) 035-67-77",
+    "hours": "Ежедневно с 10:00 до 22:00",
+    "address": "Коломна, ул. Октябрьской Революции, 362, ТРЦ Рио, фудкорт",
+    "pickup": "ул. Октябрьской Революции, 362, ТРЦ «Рио», третий этаж, фудкорт, #BEEFштекс"
+  },
+  "delivery": {
+    "rule": "Курьером: до 2000 ₽ — 300 ₽, от 2000 ₽ — бесплатно",
+    "zones": [
+      {
+        "name": "Центр (до Старого города)",
+        "price": "300 ₽"
+      },
+      {
+        "name": "Старый город",
+        "price": "300 ₽"
+      },
+      {
+        "name": "Колычево",
+        "price": "300 ₽"
+      },
+      {
+        "name": "Щурово",
+        "price": "300 ₽"
+      }
+    ]
+  },
+  "social": [
+    "https://vk.com/beefshtekskolomna",
+    "https://t.me/BEEFshteksDelivery",
+    "https://www.instagram.com/beefshteks_burgers/",
+    "https://eda.yandex.ru/restaurant/beefshteks"
+  ],
+  "images": [
+    "https://static.tildacdn.com/img/tildacopy.png",
+    "https://static.tildacdn.com/tild6463-3961-4333-b838-613162653537/pexels-photo-1331139.jpeg",
+    "https://static.tildacdn.com/tild3238-3435-4633-a431-393861323462/noroot.png"
+  ],
+  "pages": [
+    {
+      "file": "delivery.html",
+      "texts": [
+        "Меню #rec1865096951 .t-btnflex.t-btnflex_type_button {color:#000000;background-color:#ffffff;border-style:solid !important;border-color:#ff0000 !important;--border-width:1px;border-radius:10px;box-shadow:none !important;transition-duration:0.2s;transition-property:background-color,color,border-color,box-shadow,opacity,transform,gap;transition-timing-function:ease-in-out;}",
+        "Доставка курьером\n\nДо 2000руб. - 300руб.\n От 2000руб. - бесплатно",
+        "Народ, мы запускаем доставку.\nТеперь любимые бургеры, смэши и всё, за что вы нас цените, можно заказать с 10:00 до 21:00.\n\nРаботаем в тестовом режиме, оттачиваем скорость и сервис.\nПеред оформлением заказа обязательно уточняйте свою зону доставки по телефону.\n\n#BEEFштекс теперь ближе, чем кажется.",
+        "Карта доставки\n Залетай к нам с 10:00 до 22:00 — каждый день, без выходных!\n📱 +7 (916) 035-67-77\nАдрес: Коломна, ул. Октябрьской Революции, 362, ТРЦ Рио, фудкорт",
+        "Самовывоз\n Заказ можно забрать по адресу: улица Октябрьской Революции, 362, ТРЦ «Рио», третий этаж, фудкорт, #BEEFштекс."
+      ],
+      "images": [
+        "https://static.tildacdn.com/tild6463-3961-4333-b838-613162653537/pexels-photo-1331139.jpeg",
+        "https://static.tildacdn.com/tild3238-3435-4633-a431-393861323462/noroot.png",
+        "https://static.tildacdn.com/img/tildacopy.png"
+      ]
+    }
+  ],
+  "sectionTitles": [
+    "#BEEF Бургеры",
+    "#rec1860629771 .t-section__title{color:#ffffff;font-family:var(--t-headline-font,Arial);font-weight:500;}@media screen and (min-width:900px){#rec1860629771 .t-section__title{font-size:40px;}}#rec1860629771 .t-section__descr{font-size:14px;}",
+    "Смэш Бургеры",
+    "#rec1248845236 .t-section__title{color:#ffffff;font-family:var(--t-headline-font,Arial);font-weight:500;}@media screen and (min-width:900px){#rec1248845236 .t-section__title{font-size:40px;}}",
+    "Стартеры",
+    "#rec1021699076 .t-section__title{color:#ffffff;font-family:var(--t-headline-font,Arial);font-weight:500;}@media screen and (min-width:900px){#rec1021699076 .t-section__title{font-size:40px;}}#rec1021699076 .t-section__descr{font-family:var(--t-headline-font,Arial);font-weight:500;}",
+    "Завтрак",
+    "Комбо",
+    "Салаты",
+    "Напитки",
+    "#rec1239280526 .t-section__title{color:#ffffff;font-family:var(--t-headline-font,Arial);font-weight:500;}@media screen and (min-width:900px){#rec1239280526 .t-section__title{font-size:40px;}}",
+    "Соусы"
+  ],
+  "quotes": [
+    "Мы верим в мясо\n\n <svg role=\"presentation\" class=\"t-cover__arrow-svg\" style=\"fill:#ffffff;\" x=\"0px\" y=\"0px\" width=\"38.417px\" height=\"18.592px\" v",
+    "BEEFштекс <meta property=\"og:description\" content=\"Под хороший хип-хоп и рок-н-ролл здесь готовят неповторимые бургеры с коломенским хара",
+    "Бургеры с характером!\n\nМы верим в мясо\n\n <svg role=\"presentation\" class=\"t-cover__arrow-svg\" style=\"fill:#ffffff;\" x=\"0px\" y=\"0",
+    "Залетай к нам с 10:00 до 22:00 — каждый день, без выходных!\n📱 +7 (916) 035-67-77\nАдрес: Коломна, ул. Октябрьской Революции, 362, ТРЦ Рио, фудкорт\n <a\nclass=\"t-btn t-btnflex t-btnflex_type_button t-btnflex_sm js-click-stat\"\nhref=\"+7 (916) 035-67-77\" data-tilda-event-name=\"/tilda/click/rec1034877696/but",
+    "PRO #BEEF\n\nPRO Нас\n\nС"
+  ]
+}
