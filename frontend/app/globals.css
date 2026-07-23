@@ -2595,6 +2595,7 @@ html[data-past-menu="1"] .home-first-screen {
   overflow: hidden;
   background: var(--about-bg);
   color: #fff;
+  font-weight: 500;
 }
 
 .about-hero {
@@ -2637,7 +2638,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-section__eyebrow {
   margin: 0 0 0.9rem;
   font-size: 0.82rem;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--beef-accent);
 }
@@ -2664,7 +2665,7 @@ html[data-past-menu="1"] .home-first-screen {
   margin: 0.65rem 0 0;
   color: rgba(255, 255, 255, 0.82);
   font-size: 0.98rem;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.45;
 }
 
@@ -2717,7 +2718,7 @@ html[data-past-menu="1"] .home-first-screen {
   margin: 0;
   max-width: 18ch;
   font-size: clamp(2.3rem, 4.4vw, 4.4rem);
-  font-weight: 850;
+  font-weight: 800;
   letter-spacing: -0.055em;
   line-height: 1;
 }
@@ -2737,20 +2738,79 @@ html[data-past-menu="1"] .home-first-screen {
 
 .about-story__grid {
   display: grid;
+  grid-template-areas:
+    "intro"
+    "copy"
+    "media";
   gap: 2.75rem;
 }
 
 .about-story__intro {
+  grid-area: intro;
   max-width: 42rem;
 }
 
 .about-story__copy {
+  grid-area: copy;
   display: grid;
   gap: 1.2rem;
   max-width: 42rem;
   color: var(--about-copy);
   font-size: clamp(1.05rem, 1.35vw, 1.18rem);
   line-height: 1.72;
+}
+
+.about-story__media {
+  position: relative;
+  grid-area: media;
+  min-height: clamp(20rem, 42vw, 34rem);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--about-line);
+  border-radius: var(--about-radius-lg);
+  background: var(--about-panel);
+}
+
+.about-story__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8) contrast(1.08);
+}
+
+.about-story__media::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), transparent 62%);
+}
+
+.about-story__media figcaption {
+  position: absolute;
+  z-index: 1;
+  right: clamp(1.25rem, 3vw, 2rem);
+  bottom: clamp(1.25rem, 3vw, 2rem);
+  left: clamp(1.25rem, 3vw, 2rem);
+  display: grid;
+  gap: 0.35rem;
+  color: #fff;
+}
+
+.about-story__media figcaption span {
+  color: var(--beef-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about-story__media figcaption strong {
+  max-width: 12ch;
+  font-size: clamp(1.5rem, 2.5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
 }
 
 .about-story__copy p,
@@ -2797,7 +2857,7 @@ html[data-past-menu="1"] .home-first-screen {
   margin-top: clamp(2.5rem, 5vw, 4.5rem);
   color: rgba(255, 255, 255, 0.8);
   font-size: clamp(1.25rem, 2vw, 1.75rem);
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.35;
 }
@@ -2862,6 +2922,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-beef__question h3 {
   margin: 0;
   font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 800;
   letter-spacing: -0.045em;
   line-height: 1.05;
 }
@@ -2907,6 +2968,7 @@ html[data-past-menu="1"] .home-first-screen {
 .about-point h3 {
   margin: 0 0 0.55rem;
   font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .about-point p {
@@ -3151,6 +3213,19 @@ html[data-past-menu="1"] .home-first-screen {
 }
 
 @media (min-width: 700px) {
+  .about-story__grid {
+    grid-template-areas:
+      "intro media"
+      "copy media";
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.88fr);
+    align-items: start;
+    column-gap: clamp(3rem, 7vw, 8rem);
+  }
+
+  .about-story__media {
+    min-height: 100%;
+  }
+
   .about-gallery {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: 1fr;

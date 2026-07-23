@@ -56,6 +56,18 @@ export default function AboutClient() {
                 <p key={p.slice(0, 48)}>{p}</p>
               ))}
             </div>
+            <figure className="about-story__media">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/about/photo-3.jpg"
+                alt="Корнер BEEFштекс в ТРЦ Рио"
+                loading="eager"
+              />
+              <figcaption>
+                <span>Коломна · с 2023</span>
+                <strong>Готовим для своих</strong>
+              </figcaption>
+            </figure>
           </div>
 
           {"gallery" in about && Array.isArray(about.gallery) && about.gallery.length > 0 ? (
