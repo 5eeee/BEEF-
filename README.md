@@ -1,301 +1,71 @@
-# Beefshteks — Food Delivery Platform (Microservices)
+# BEEFштекс
 
+[![CI](https://github.com/5eeee/BEEF-/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/5eeee/BEEF-/actions/workflows/ci-cd.yml)
 
+Сайт доставки бургеров (FastAPI микросервисы + Next.js).  
+**GitHub Pages этот проект не хостит** — нужен Docker локально или свой сервер. CI на GitHub проверяет сборку и тесты.
 
-Сайт доставки готовой еды на микросервисной архитектуре. Mobile-first PWA, SEO, интеграции с платежами, CRM и службами доставки.
-
-
-
-## Быстрый старт
-
-
+## Быстрый старт (локально)
 
 ```bash
-
-# Клонировать и поднять всю инфраструктуру локально
-
+git clone https://github.com/5eeee/BEEF-.git
+cd BEEF-
 cp .env.example .env
-
 docker compose up -d --build
+```
 
+Подожди ~1–2 минуты, пока сервисы станут healthy:
 
-
-# Дождаться запуска (catalog seed + миграции ~30 сек)
-
+```bash
 docker compose ps
-
-
-
-# Открыть сайт
-
-# Frontend PWA:  http://localhost:3000
-
-# API Gateway:   http://localhost:8000
-
-# Traefik UI:    http://localhost:8080
-
 ```
 
+Открой:
 
+| Что | URL |
+|-----|-----|
+| Сайт | http://localhost:3000 |
+| API Gateway | http://localhost:8000 |
+| RabbitMQ UI | http://localhost:15672 |
 
-### Проверка API
-
-
+### Только фронт (API уже поднят)
 
 ```bash
+cd frontend
+npm ci
+npx next dev -H 0.0.0.0 -p 3000
+```
 
-# Категории и меню
+API должен быть на `http://localhost:8000` (проксируется через Next).
 
+## Проверка API
+
+```bash
 curl http://localhost:8000/api/v1/categories
-
-curl http://localhost:8000/api/v1/products
-
-curl "http://localhost:8000/api/v1/search?q=бургер&autocomplete=true"
-
-
-
-# Корзина и заказ
-
-curl http://localhost:8000/api/v1/cart -H "X-Session-Id: test-session-12345678"
-
-curl -X POST http://localhost:8000/api/v1/cart/items \
-
-  -H "Content-Type: application/json" \
-
-  -H "X-Session-Id: test-session-12345678" \
-
-  -d '{"product_id":"00000000-0000-0000-0000-000000000001","quantity":2}'
-
+curl "http://localhost:8000/api/v1/products?limit=5"
 ```
 
+## CI на GitHub
 
+При каждом push в `main` запускается:
 
-## Frontend (Next.js 14 PWA)
+1. Ruff (Python lint)
+2. `npm run build` (Next.js)
+3. Pytest для order / payment / delivery / content
 
+Статус: https://github.com/5eeee/BEEF-/actions
 
-
-### Через Docker (рекомендуется)
-
-
-
-```bash
-
-docker compose up -d --build frontend
-
-# → http://localhost:3000
+## Структура
 
 ```
-
-
-
-### Локальная разработка (без Docker)
-
-
-
-```bash
-
-# 1. Поднять backend
-
-docker compose up -d postgres redis rabbitmq meilisearch traefik catalog-service order-service promotion-service delivery-service
-
-
-
-# 2. Запустить frontend
-
-cd frontend
-
-npm install
-
-set NEXT_PUBLIC_API_URL=http://localhost:8000   # Windows CMD
-
-# export NEXT_PUBLIC_API_URL=http://localhost:8000  # Linux/macOS
-
-npm run dev
-
-# → http://localhost:3000
-
+frontend/          Next.js PWA
+services/          микросервисы (catalog, order, identity, …)
+infra/             nginx gateway, postgres init
+docker-compose.yml полный локальный стек
 ```
 
-
-
-### Сборка production
-
-
-
-```bash
-
-cd frontend
-
-npm install
-
-npm run build
-
-npm start
-
-```
-
-
-
-**Переменные окружения:**
-
-
-
-| Переменная | По умолчанию | Описание |
-
-|------------|--------------|----------|
-
-| `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | URL API Gateway (для SSR / fallback) |
-| `API_PROXY_URL` | `http://localhost:8000` | Backend для Next.js rewrites (`/api/*` → gateway) |
-
-
-
-## Архитектура
-
-
-
-```
-
-                    ┌─────────────┐
-
-                    │   CDN /     │
-
-                    │   Nginx     │
-
-                    └──────┬──────┘
-
-                           │
-
-              ┌────────────┴────────────┐
-
-              │      Frontend (PWA)     │
-
-              │      Next.js 14         │
-
-              └────────────┬────────────┘
-
-                           │ HTTPS
-
-              ┌────────────▼────────────┐
-
-              │     API Gateway         │
-
-              │  (Traefik :8000)        │
-
-              └────────────┬────────────┘
-
-         sync REST/gRPC    │    async events (RabbitMQ)
-
-    ┌──────────┬───────────┼───────────┬──────────┐
-
-    ▼          ▼           ▼           ▼          ▼
-
- Catalog   Order      Identity    Payment   Notification
-
- Service   Service    Service     Service   Service
-
-    │          │           │           │          │
-
-    ▼          ▼           ▼           ▼          ▼
-
- Postgres  Postgres    Postgres    Postgres   Postgres
-
- Meili     Redis       Redis       —          Redis
-
-```
-
-
-
-## Сервисы
-
-
-
-| Сервис | Порт | БД | Назначение |
-
-|--------|------|-----|------------|
-
-| api-gateway | 8000 | — | Маршрутизация через Traefik |
-
-| catalog-service | 8001 | PostgreSQL + Meilisearch | Меню, поиск, фильтры |
-
-| identity-service | 8002 | PostgreSQL + Redis | SMS-авторизация, адреса |
-
-| order-service | 8003 | PostgreSQL + Redis | Корзина, checkout, заказы |
-
-| payment-service | 8004 | PostgreSQL | Платёжный шлюз |
-
-| notification-service | 8005 | PostgreSQL + Redis | SMS, push (PWA) |
-
-| delivery-service | 8006 | PostgreSQL + Redis | DaData, расчёт доставки |
-
-| content-service | 8007 | PostgreSQL | Отзывы, блог, SEO-страницы |
-
-| promotion-service | 8008 | PostgreSQL | Промокоды, акции |
-
-| integration-service | 8009 | PostgreSQL | CRM (МойСклад / 1С) |
-
-| media-service | 8010 | MinIO (S3) | Изображения, WebP |
-
-| **frontend** | **3000** | — | **Next.js 14 PWA** |
-
-
-
-## Команды разработки
-
-
-
-```bash
-
-# Запуск одного сервиса локально (без Docker)
-
-cd services/order-service
-
-python -m venv .venv && .venv\Scripts\activate  # Windows
-
-pip install -r requirements.txt
-
-uvicorn app.main:app --reload --port 8003
-
-
-
-# Миграции catalog-service
-
-cd services/catalog-service && alembic upgrade head
-
-python -m app.seed
-
-
-
-# Тесты
-
-pytest services/order-service/tests -v
-
-
-
-# Линтинг
-
-ruff check services/
-
-```
-
-
-
-## Промокоды (dev)
-
-
-
-| Код | Скидка |
-
-|-----|--------|
-
-| `WELCOME10` | 10% от суммы |
-
-| `BEEF200` | 200 ₽ (от 1500 ₽) |
-
-
-
-## Документация
-
-
-
-- [Архитектурное решение (ADR)](docs/ARCHITECTURE.md)
-
+## Важно
+
+- Файл `.env` не коммитится — копируй из `.env.example`
+- Для продакшена нужен свой хостинг (VPS + Docker / Vercel для фронта + API отдельно)
+- Не используй GitHub Pages для этого репозитория — там нет Node/API

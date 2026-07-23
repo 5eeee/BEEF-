@@ -262,6 +262,7 @@ services:
       NEXT_PUBLIC_API_URL: http://localhost:8000
       API_PROXY_URL: http://gateway
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+    restart: unless-stopped
     depends_on:
       - gateway
       - catalog-service
