@@ -53,7 +53,7 @@ export default function CartPage() {
   return (
     <>
       <Header />
-      <main className="container-page py-8">
+      <main className="beef-page container-page py-8">
         <h1 className="mb-6 text-3xl font-bold">Корзина</h1>
         {loading ? (
           <p className="text-muted">Загрузка…</p>

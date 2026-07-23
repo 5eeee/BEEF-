@@ -23,7 +23,7 @@ export default function BlogPostPage() {
   return (
     <>
       <Header />
-      <main className="container-page max-w-3xl py-8">
+      <main className="beef-page container-page max-w-3xl py-8">
         <Link href="/" className="mb-6 inline-block text-sm text-terracotta hover:underline">
           ← На главную
         </Link>

@@ -51,7 +51,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
     return (
       <>
         <Header />
-        <main className="container-page py-16 text-center text-muted">Загрузка…</main>
+        <main className="beef-page container-page py-16 text-center text-muted">Загрузка…</main>
       </>
     );
   }
@@ -60,7 +60,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
     return (
       <>
         <Header />
-        <main className="container-page py-16 text-center text-muted">Перенаправление…</main>
+        <main className="beef-page container-page py-16 text-center text-muted">Перенаправление…</main>
       </>
     );
   }
@@ -68,7 +68,7 @@ export default function PaymentPage({ params }: { params: { orderId: string } })
   return (
     <>
       <Header />
-      <main className="container-page max-w-lg py-8">
+      <main className="beef-page container-page max-w-lg py-8">
         <h1 className="mb-2 text-3xl font-bold">Оплата заказа</h1>
         <p className="mb-6 text-muted">
           Заказ <span className="font-semibold text-terracotta">{order.order_number}</span>

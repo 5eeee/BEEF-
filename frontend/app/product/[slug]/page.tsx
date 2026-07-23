@@ -82,7 +82,7 @@ export default async function ProductPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
       <Header />
-      <main className="container-page py-6">
+      <main className="beef-page container-page py-6">
         <nav aria-label="Хлебные крошки" className="mb-6 text-sm text-muted">
           <Link href="/" className="hover:text-terracotta">
             Главная

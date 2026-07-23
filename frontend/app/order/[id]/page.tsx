@@ -41,7 +41,7 @@ export default function OrderPage({ params }: { params: { id: string } }) {
     return (
       <>
         <Header />
-        <main className="container-page py-16 text-center">
+        <main className="beef-page container-page py-16 text-center">
           <p className="text-muted">Заказ не найден</p>
           <Link href="/" className="mt-4 inline-block text-terracotta hover:underline">
             В меню
@@ -55,7 +55,7 @@ export default function OrderPage({ params }: { params: { id: string } }) {
     return (
       <>
         <Header />
-        <main className="container-page py-16 text-center text-muted">Загрузка заказа…</main>
+        <main className="beef-page container-page py-16 text-center text-muted">Загрузка заказа…</main>
       </>
     );
   }
@@ -65,7 +65,7 @@ export default function OrderPage({ params }: { params: { id: string } }) {
   return (
     <>
       <Header />
-      <main className="container-page max-w-lg py-8">
+      <main className="beef-page container-page max-w-lg py-8">
         <div className="mb-6 text-center">
           {isPaid ? (
             <>

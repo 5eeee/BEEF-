@@ -37,7 +37,7 @@ export default function OrdersPage() {
   return (
     <>
       <Header />
-      <main className="container-page max-w-2xl py-8">
+      <main className="beef-page container-page max-w-2xl py-8">
         <h1 className="mb-6 text-3xl font-bold">Мои заказы</h1>
 
         {!authLoading && !isLoggedIn && (

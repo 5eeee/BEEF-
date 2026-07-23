@@ -7,6 +7,12 @@
   --font-display: "Fraunces", Georgia, serif;
   --catalog-max: 90rem;
   --catalog-pad: 1.25rem;
+  --beef-surface: #111;
+  --beef-panel: #1c1c1c;
+  --beef-line: rgba(255, 255, 255, 0.1);
+  --beef-text: #fff;
+  --beef-muted: rgba(255, 255, 255, 0.58);
+  --beef-accent: #c8e635;
 }
 
 @media (min-width: 640px) {
@@ -3117,10 +3123,12 @@ html[data-past-menu="1"] .home-first-screen {
   gap: 1.35rem;
 }
 
-.home-brand-footer__inner--bottom {
-  gap: 0.85rem;
-  padding-top: 1rem;
-  padding-bottom: 1.75rem;
+.home-brand-footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.25rem;
 }
 
 .home-brand-footer__brand {
@@ -3180,26 +3188,25 @@ html[data-past-menu="1"] .home-first-screen {
   color: rgba(255, 255, 255, 0.35);
 }
 
-.home-brand-footer__map-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.home-brand-footer__map-label {
+.home-brand-footer__addr {
   margin: 0;
   font-size: 0.88rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.7);
 }
 
+.home-brand-footer__map-wrap {
+  width: 100%;
+  margin-top: 1.5rem;
+  line-height: 0;
+}
+
 .home-brand-footer__map {
   display: block;
   width: 100%;
-  height: min(42vw, 280px);
-  min-height: 200px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
+  height: clamp(220px, 42vw, 360px);
+  border: 0;
+  border-radius: 1.35rem 1.35rem 0 0;
   background: #0e0e0e;
 }
 
@@ -3209,6 +3216,7 @@ html[data-past-menu="1"] .home-first-screen {
   font-weight: 650;
   color: #c8e635;
   text-decoration: none;
+  line-height: 1.4;
 }
 
 .home-brand-footer__map-link:hover {
@@ -3525,12 +3533,13 @@ html[data-theme="light"] .home-brand-footer__nav a:hover {
   color: #7a8f10;
 }
 
+html[data-theme="light"] .home-brand-footer__addr,
 html[data-theme="light"] .home-brand-footer__map-label {
   color: rgba(20, 17, 15, 0.65);
 }
 
 html[data-theme="light"] .home-brand-footer__map {
-  border-color: rgba(20, 17, 15, 0.12);
+  border-color: transparent;
   background: #fff;
 }
 
@@ -3543,4 +3552,91 @@ html[data-theme="light"] .site-footer {
   background: #ebe6de !important;
   border-color: rgba(20, 17, 15, 0.1) !important;
   color: #14110f;
+}
+
+/* Shared dark BEEF treatment for transactional and content pages. */
+.beef-page {
+  min-height: calc(100svh - 4.25rem);
+  color: var(--beef-text);
+  background:
+    radial-gradient(ellipse 75% 42% at 50% 0%, rgba(200, 230, 53, 0.08), transparent 68%),
+    #0a0a0a;
+}
+
+.beef-page .text-ink {
+  color: var(--beef-text) !important;
+}
+
+.beef-page .text-muted {
+  color: var(--beef-muted) !important;
+}
+
+.beef-page .text-terracotta {
+  color: var(--beef-accent) !important;
+}
+
+.beef-page .bg-cream,
+.beef-page .bg-cream\/50,
+.beef-page .bg-white {
+  background-color: var(--beef-panel) !important;
+}
+
+.beef-page .border-stone-100,
+.beef-page .border-stone-200,
+.beef-page .ring-stone-100 {
+  border-color: var(--beef-line) !important;
+  --tw-ring-color: var(--beef-line) !important;
+}
+
+.beef-page input,
+.beef-page textarea {
+  border-color: var(--beef-line);
+  background: #111;
+  color: var(--beef-text);
+}
+
+.beef-page input::placeholder,
+.beef-page textarea::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.beef-page input:focus,
+.beef-page textarea:focus {
+  border-color: var(--beef-accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(200, 230, 53, 0.12);
+}
+
+.beef-page .bg-terracotta,
+.beef-page .bg-mustard {
+  background-color: var(--beef-accent) !important;
+  color: #14110f !important;
+}
+
+.beef-page .prose {
+  color: var(--beef-text);
+}
+
+.beef-page .prose :where(h1, h2, h3, h4, strong) {
+  color: var(--beef-text);
+}
+
+.beef-page .prose :where(p, li) {
+  color: var(--beef-muted);
+}
+
+html[data-theme="light"] .beef-page {
+  --beef-surface: #f4f1ea;
+  --beef-panel: #fff;
+  --beef-line: rgba(20, 17, 15, 0.12);
+  --beef-text: #14110f;
+  --beef-muted: rgba(20, 17, 15, 0.6);
+  background:
+    radial-gradient(ellipse 75% 42% at 50% 0%, rgba(200, 230, 53, 0.14), transparent 68%),
+    #f4f1ea;
+}
+
+html[data-theme="light"] .beef-page input,
+html[data-theme="light"] .beef-page textarea {
+  background: #fff;
 }

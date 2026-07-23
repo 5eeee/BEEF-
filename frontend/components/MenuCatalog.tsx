@@ -58,6 +58,7 @@ export default function MenuCatalog({
   const [qtyById, setQtyById] = useState<Record<string, number>>({});
   const [catsStuck, setCatsStuck] = useState(false);
   const catsSentinelRef = useRef<HTMLDivElement>(null);
+  const mobileCatsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const sync = () => {
@@ -105,27 +106,46 @@ export default function MenuCatalog({
   useEffect(() => {
     if (loading || sections.length === 0) return;
 
-    const nodes = sections
-      .map((s) => document.getElementById(`cat-${s.slug}`))
-      .filter((n): n is HTMLElement => Boolean(n));
-    if (!nodes.length) return;
+    let frame = 0;
+    const syncActiveCategory = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const nodes = sections
+          .map((section) => ({ slug: section.slug, node: document.getElementById(`cat-${section.slug}`) }))
+          .filter((section): section is { slug: string; node: HTMLElement } => Boolean(section.node));
+        if (!nodes.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const top = visible[0];
-        if (!top?.target?.id) return;
-        const slug = top.target.id.replace(/^cat-/, "");
-        onCategoryChange(slug);
-      },
-      { root: null, rootMargin: "-25% 0px -55% 0px", threshold: [0.15, 0.35, 0.55] }
+        const headerBottom = document.querySelector<HTMLElement>(".header-shell")?.getBoundingClientRect().bottom ?? 0;
+        const referenceLine = Math.max(16, headerBottom + 18);
+        if (nodes[0].node.getBoundingClientRect().top > referenceLine) {
+          if (category !== null) onCategoryChange(null);
+          return;
+        }
+
+        const active = nodes.reduce(
+          (closest, section) => (section.node.getBoundingClientRect().top <= referenceLine ? section : closest),
+          nodes[0]
+        );
+        if (active.slug !== category) onCategoryChange(active.slug);
+      });
+    };
+
+    syncActiveCategory();
+    window.addEventListener("scroll", syncActiveCategory, { passive: true });
+    window.addEventListener("resize", syncActiveCategory);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", syncActiveCategory);
+      window.removeEventListener("resize", syncActiveCategory);
+    };
+  }, [loading, sections, category, onCategoryChange]);
+
+  useEffect(() => {
+    const activeButton = mobileCatsRef.current?.querySelector<HTMLElement>(
+      `[data-category="${category ?? "all"}"]`
     );
-
-    nodes.forEach((n) => observer.observe(n));
-    return () => observer.disconnect();
-  }, [loading, sections, onCategoryChange]);
+    activeButton?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [category]);
 
   const selectCategory = (slug: string | null) => {
     onCategoryChange(slug);
@@ -233,11 +253,13 @@ export default function MenuCatalog({
 
       <div ref={catsSentinelRef} className="ye-cats-mobile-sentinel" aria-hidden />
       <div
+        ref={mobileCatsRef}
         className={`ye-panel ye-cats-mobile ${catsStuck ? "is-stuck" : ""}`}
         aria-label="Категории"
       >
         <button
           type="button"
+          data-category="all"
           className={`ye-cats-mobile__item ${category === null ? "is-active" : ""}`}
           onClick={() => selectCategory(null)}
         >
@@ -247,6 +269,7 @@ export default function MenuCatalog({
           <button
             key={cat.slug}
             type="button"
+            data-category={cat.slug}
             className={`ye-cats-mobile__item ${category === cat.slug ? "is-active" : ""}`}
             onClick={() => selectCategory(cat.slug)}
           >

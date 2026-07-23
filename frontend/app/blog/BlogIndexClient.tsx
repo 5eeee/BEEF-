@@ -22,7 +22,7 @@ export default function BlogIndexClient() {
     <div className="about-page">
       <Header theme="dark" transparent={false} variant="hero" onCartClick={() => setCartOpen(true)} />
 
-      <main className="container-page py-10">
+      <main className="beef-page container-page py-10">
         <p className="about-hero__eyebrow">Блог</p>
         <h1 className="about-hero__brand" style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}>
           Новости и вкус

@@ -10,7 +10,7 @@ export default function ProfilePage() {
   return (
     <>
       <Header />
-      <main className="container-page max-w-lg py-8">
+      <main className="beef-page container-page max-w-lg py-8">
         <h1 className="mb-6 text-3xl font-bold">Настройки</h1>
 
         <section className="mb-6 rounded-2xl border border-stone-100 bg-white p-5">

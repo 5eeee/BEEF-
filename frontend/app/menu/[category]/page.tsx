@@ -44,7 +44,7 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <>
       <Header />
-      <main className="container-page space-y-8 py-6">
+      <main className="beef-page container-page space-y-8 py-6">
         <nav aria-label="Хлебные крошки" className="text-sm text-muted">
           <Link href="/" className="hover:text-terracotta">
             Главная

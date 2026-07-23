@@ -159,6 +159,18 @@ export default function HomeClient() {
               <p className="home-brand-footer__addr">
                 Коломна, ул. Октябрьской Революции, 362 · ТРЦ Рио, фудкорт
               </p>
+
+              <div className="home-brand-footer__meta">
+                <a
+                  className="home-brand-footer__map-link"
+                  href="https://yandex.ru/maps/org/beefshteks/24908451928/?ll=38.800483%2C55.084059&z=17"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Открыть BEEFштекс в Яндекс Картах
+                </a>
+                <p className="home-brand-footer__copy">© {new Date().getFullYear()} BEEFштекс</p>
+              </div>
             </div>
 
             <div className="home-brand-footer__map-wrap">
@@ -170,18 +182,6 @@ export default function HomeClient() {
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
               />
-            </div>
-
-            <div className="home-brand-footer__inner home-brand-footer__inner--bottom">
-              <a
-                className="home-brand-footer__map-link"
-                href="https://yandex.ru/maps/org/beefshteks/24908451928/?ll=38.800483%2C55.084059&z=17"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Открыть BEEFштекс в Яндекс Картах
-              </a>
-              <p className="home-brand-footer__copy">© {new Date().getFullYear()} BEEFштекс</p>
             </div>
           </footer>
         </main>
