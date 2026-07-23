@@ -68,9 +68,16 @@ export default function HomeClient() {
       .catch(() => {});
   }, []);
 
+  const isDemo = process.env.NEXT_PUBLIC_DEMO === "1";
+
   return (
     <>
       <div className="site-shell is-visible">
+        {isDemo ? (
+          <div className="demo-banner" role="status">
+            Демо для заказчика — меню и корзина работают в облаке. Полный заказ/оплата — на следующем этапе.
+          </div>
+        ) : null}
         <Header
           transparent
           theme="dark"

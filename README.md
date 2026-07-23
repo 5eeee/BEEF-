@@ -1,9 +1,11 @@
 # BEEFштекс
 
-[![CI](https://github.com/5eeee/BEEF-/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/5eeee/BEEF-/actions/workflows/ci-cd.yml)
+[![CI](https://github.com/5eeee/BEEF-/actions/workflows/ci.yml/badge.svg)](https://github.com/5eeee/BEEF-/actions/workflows/ci.yml)
 
 Сайт доставки бургеров (FastAPI микросервисы + Next.js).  
 **GitHub Pages этот проект не хостит** — нужен Docker локально или свой сервер. CI на GitHub проверяет сборку и тесты.
+
+**Демо для заказчика (только фронт, без ноутбука):** см. [DEMO.md](DEMO.md) — Import репо на Vercel, Root Directory = `frontend`.
 
 ## Быстрый старт (локально)
 

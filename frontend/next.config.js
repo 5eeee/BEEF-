@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
-const apiProxy = process.env.API_PROXY_URL || "http://localhost:8000";
+const isVercel = Boolean(process.env.VERCEL);
+const apiProxy = process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const nextConfig = {
-  output: "standalone",
+  // Docker image uses standalone; Vercel uses its own Next runtime
+  ...(isVercel ? {} : { output: "standalone" }),
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
@@ -41,6 +43,8 @@ const nextConfig = {
     ];
   },
   async rewrites() {
+    // On Vercel there is no local API gateway — skip proxy (demo uses fallback catalog)
+    if (isVercel || process.env.DEMO_MODE === "1") return [];
     return [
       {
         source: "/api/:path*",

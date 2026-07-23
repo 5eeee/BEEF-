@@ -504,6 +504,19 @@ html {
   opacity: 1;
 }
 
+.demo-banner {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  padding: 0.55rem 1rem;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: #1a1208;
+  background: linear-gradient(90deg, #f0c36a, #e8a838);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
 .home-first-screen {
   position: fixed;
   inset: 0;

@@ -43,7 +43,7 @@ export async function getProducts(params: Record<string, string> = {}): Promise<
   const qs = new URLSearchParams({ page_size: "100", ...params }).toString();
   const data = await catalogFetch<ProductList>(`/api/v1/products?${qs}`);
   if (data?.items?.length) return data;
-  return fallbackProductList(params.category);
+  return fallbackProductList(params);
 }
 
 export async function getAllProductSlugs(): Promise<string[]> {
