@@ -156,6 +156,29 @@ export default function HomeClient() {
                 <Link href="/blog">Блог</Link>
                 <a href="tel:+79160356777">+7 (916) 035-67-77</a>
               </nav>
+
+              <div className="home-brand-footer__map-wrap">
+                <p className="home-brand-footer__map-label">
+                  Коломна, ул. Октябрьской Революции, 362 · ТРЦ Рио, фудкорт
+                </p>
+                <iframe
+                  className="home-brand-footer__map"
+                  title="BEEFштекс на карте — ТРЦ Рио, Коломна"
+                  src="https://yandex.ru/map-widget/v1/?ll=38.800483%2C55.084059&z=16&pt=38.800483,55.084059,pm2rdm&l=map"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+                <a
+                  className="home-brand-footer__map-link"
+                  href="https://yandex.ru/maps/org/beefshteks/24908451928/?ll=38.800483%2C55.084059&z=16"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Открыть в Яндекс Картах
+                </a>
+              </div>
+
               <p className="home-brand-footer__copy">© {new Date().getFullYear()} BEEFштекс</p>
             </div>
           </footer>

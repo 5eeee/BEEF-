@@ -94,7 +94,8 @@ export default function CinematicHero() {
     };
 
     const onMove = (e: MouseEvent) => {
-      if (usingGyro) return;
+      // Mouse always wins on desktop / after theme toggle clicks
+      usingGyro = false;
       const el = ref.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
@@ -107,9 +108,10 @@ export default function CinematicHero() {
     const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
     const onOrientation = (e: DeviceOrientationEvent) => {
+      if (typeof e.gamma !== "number" || typeof e.beta !== "number") return;
       usingGyro = true;
-      const gamma = typeof e.gamma === "number" ? e.gamma : 0;
-      const beta = typeof e.beta === "number" ? e.beta : 45;
+      const gamma = e.gamma;
+      const beta = e.beta;
       target = {
         x: clamp(gamma / 40, -1.15, 1.15),
         y: clamp((beta - 45) / 40, -1.15, 1.15),
@@ -126,6 +128,9 @@ export default function CinematicHero() {
     const enableGyro = async () => {
       if (gyroBound) return;
       if (typeof DeviceOrientationEvent === "undefined") return;
+      // Gyro only on touch / coarse pointers — theme button clicks on desktop must not steal cursor parallax
+      const coarse = window.matchMedia("(pointer: coarse)").matches;
+      if (!coarse) return;
       gyroBound = true;
       const DOE = DeviceOrientationEvent as unknown as {
         requestPermission?: () => Promise<"granted" | "denied" | "default">;
@@ -149,29 +154,23 @@ export default function CinematicHero() {
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    const isTouch = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
     if (isTouch && typeof DeviceOrientationEvent !== "undefined") {
       const DOE = DeviceOrientationEvent as unknown as {
         requestPermission?: () => Promise<"granted" | "denied" | "default">;
       };
       if (typeof DOE.requestPermission !== "function") {
         void enableGyro();
+      } else {
+        window.addEventListener("touchend", () => void enableGyro(), { passive: true, once: true });
       }
     }
-
-    const onFirstTap = () => {
-      void enableGyro();
-    };
-    window.addEventListener("touchend", onFirstTap, { passive: true, once: true });
-    window.addEventListener("click", onFirstTap, { once: true });
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("deviceorientation", onOrientation);
-      window.removeEventListener("touchend", onFirstTap);
-      window.removeEventListener("click", onFirstTap);
     };
   }, []);
 
