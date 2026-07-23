@@ -139,7 +139,7 @@ html {
   opacity: 0.92;
 }
 
-/* На главной (hero) на мобилке — только лого, чтобы кнопки одного размера */
+/* ?? ??????? (hero) ?? ??????? ? ?????? ????, ????? ?????? ?????? ??????? */
 @media (max-width: 819px) {
   .header-shell[data-mode="hero"] .header-brand__name {
     display: none;
@@ -164,6 +164,10 @@ html {
   .header-prefs {
     gap: 0.4rem;
     margin-right: 0;
+  }
+
+  .header-actions--hero .header-pref {
+    font-size: 0.72rem;
   }
 }
 
@@ -610,7 +614,7 @@ html {
   color: #14110f;
 }
 
-/* вЂ”вЂ” Site intro (buns + brand scale-through) вЂ”вЂ” */
+/* ?? Site intro (buns + brand scale-through) ?? */
 .site-intro {
   position: fixed;
   inset: 0;
@@ -716,7 +720,7 @@ html {
   }
 }
 
-/* Menu sheet — scrolls up over fixed hero */
+/* Menu sheet ? scrolls up over fixed hero */
 .menu-sheet {
   position: relative;
   z-index: 20;
@@ -759,7 +763,7 @@ html {
   }
 }
 
-/* вЂ”вЂ” Cinematic hero (BIGGER-style) вЂ”вЂ” */
+/* ?? Cinematic hero (BIGGER-style) ?? */
 @keyframes cinema-float {
   0%,
   100% {
@@ -1249,7 +1253,7 @@ html {
     font-size: clamp(2.2rem, 13vw, 3.4rem);
   }
 
-  /* Бургер ниже текста — без наложения */
+  /* ?????? ???? ?????? ? ??? ????????? */
   .cinema-hero__burger-wrap {
     width: min(92vw, 520px);
     top: 52%;
@@ -1402,7 +1406,7 @@ html {
   font-size: 0.88rem !important;
 }
 
-/* вЂ”вЂ” Photoreal morph: closed burger в†” deconstructed shot вЂ”вЂ” */
+/* ?? Photoreal morph: closed burger ? deconstructed shot ?? */
 .profile-backdrop {
   position: absolute;
   left: 50%;
@@ -1582,7 +1586,7 @@ html {
   }
 }
 
-/* —— Catalog: categories left / products / filters right —— */
+/* ?? Catalog: categories left / products / filters right ?? */
 .ye {
   background: transparent;
   padding: 1rem 0 1.5rem;
@@ -2140,7 +2144,7 @@ html {
     gap: 1.5rem 1.25rem;
   }
 }
-/* Soft menu wash вЂ” legacy */
+/* Soft menu wash ? legacy */
 .menu-wash {
   position: relative;
   z-index: 1;
@@ -2356,7 +2360,7 @@ html {
 }
 
 
-/* —— Site info (about / delivery / contacts) —— */
+/* ?? Site info (about / delivery / contacts) ?? */
 .site-info {
   padding: 2rem 0 1rem;
   color: #fff;
@@ -2514,7 +2518,7 @@ html {
   color: #fff;
 }
 
-/* —— About page —— */
+/* ?? About page ?? */
 .about-page {
   min-height: 100svh;
   background: #0a0a0a;
@@ -2806,7 +2810,7 @@ html {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-/* —— Product modal —— */
+/* ?? Product modal ?? */
 .pm-overlay {
   position: fixed;
   inset: 0;
@@ -3032,7 +3036,7 @@ html {
   height: 2.35rem;
 }
 
-/* —— Light theme: invert dark UI (black-white) —— */
+/* ?? Light theme: invert dark UI (black-white) ?? */
 html[data-theme="light"] body {
   background: #f4f1ea;
   color: #14110f;
