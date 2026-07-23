@@ -1,12 +1,6 @@
-import type { Metadata } from "next";
-import MenuPageClient from "@/components/MenuPageClient";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Меню — BEEFштекс",
-  description:
-    "Меню BEEFштекс в Коломне: бургеры, закуски, напитки и комбо. Акции, промокоды и новости корнера.",
-};
-
-export default function MenuPage() {
-  return <MenuPageClient />;
+/** Old /menu index → home (promo + catalog live in the menu sheet). */
+export default function MenuIndexRedirect() {
+  redirect("/");
 }

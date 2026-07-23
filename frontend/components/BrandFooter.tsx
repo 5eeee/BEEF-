@@ -24,7 +24,7 @@ export default function BrandFooter({ withMap = true, className = "" }: Props) {
         </div>
         <nav className="home-brand-footer__nav" aria-label="Подвал">
           <Link href="/">Главная</Link>
-          <Link href="/menu">Меню</Link>
+          <Link href="/#menu">Меню</Link>
           <Link href="/about">О нас</Link>
           <Link href="/contacts">Контакты</Link>
           <Link href="/blog">Блог</Link>

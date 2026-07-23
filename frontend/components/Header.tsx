@@ -126,13 +126,13 @@ export default function Header({
   const [address, setAddress] = useState(DEFAULT_ADDR);
   const [addrOpen, setAddrOpen] = useState(false);
   const [addrDraft, setAddrDraft] = useState("");
-  const isSheetPage = pathname === "/" || pathname === "/menu";
+  const isHome = pathname === "/";
 
   const navItems = useMemo(
     () =>
       [
         { href: "/", label: t("home") },
-        { href: "/menu", label: t("menu") },
+        { href: "/#menu", label: t("menu") },
         { href: "/about", label: t("about") },
         { href: "/contacts", label: t("contacts") },
         { href: "/blog", label: t("blog") },
@@ -258,7 +258,15 @@ export default function Header({
 
   const navActive = (href: string) => {
     if (href === "/") return pathname === "/";
+    if (href === "/#menu") return pathname === "/" || pathname.startsWith("/menu/");
     return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  const goMenu = (e?: { preventDefault: () => void }) => {
+    if (pathname === "/") {
+      e?.preventDefault();
+      document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   return (
@@ -340,6 +348,7 @@ export default function Header({
                   key={item.href}
                   href={item.href}
                   className={`header-nav__link ${navActive(item.href) ? "is-active" : ""}`}
+                  onClick={item.href === "/#menu" ? goMenu : undefined}
                 >
                   {item.label}
                 </Link>
@@ -353,7 +362,7 @@ export default function Header({
         )}
 
         <div className={`header-actions ${inMenu ? "" : "header-actions--hero"}`}>
-          {isSheetPage && !inMenu ? (
+          {isHome && !inMenu ? (
             <div className="header-prefs" role="group" aria-label="Language and theme">
               <button
                 type="button"
@@ -462,7 +471,10 @@ export default function Header({
                 key={item.href}
                 href={item.href}
                 className={`header-mobile-nav__link ${navActive(item.href) ? "is-active" : ""}`}
-                onClick={() => setNavOpen(false)}
+                onClick={(e) => {
+                  if (item.href === "/#menu") goMenu(e);
+                  setNavOpen(false);
+                }}
               >
                 {item.label}
               </Link>
@@ -470,7 +482,7 @@ export default function Header({
             <a href="tel:+79160356777" className="header-mobile-nav__phone" onClick={() => setNavOpen(false)}>
               +7 (916) 035-67-77
             </a>
-            {isSheetPage ? (
+            {isHome ? (
               <button
                 type="button"
                 className="header-mobile-nav__menu"
@@ -482,11 +494,7 @@ export default function Header({
                 {t("toMenu")}
               </button>
             ) : (
-              <Link
-                href="/menu"
-                className="header-mobile-nav__menu"
-                onClick={() => setNavOpen(false)}
-              >
+              <Link href="/#menu" className="header-mobile-nav__menu" onClick={() => setNavOpen(false)}>
                 {t("toMenu")}
               </Link>
             )}

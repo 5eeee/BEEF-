@@ -5,12 +5,12 @@ import BrandFooter from "@/components/BrandFooter";
 import CartDrawer from "@/components/CartDrawer";
 import CinematicHero from "@/components/CinematicHero";
 import Header from "@/components/Header";
+import HomePromoScreen from "@/components/HomePromoScreen";
 import MenuCatalog from "@/components/MenuCatalog";
 import ProductModal from "@/components/ProductModal";
 import ReviewsSection from "@/components/ReviewsSection";
 import { fetchActivePromos, fetchBlogPosts, fetchCategories, fetchProduct, fetchProducts, fetchReviews } from "@/lib/api";
 import type { BlogPost, Campaign, Category, Product, Review } from "@/lib/types";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 export default function HomeClient() {
@@ -40,7 +40,9 @@ export default function HomeClient() {
 
   useEffect(() => {
     fetchCategories().then(setCategories).catch(() => {});
-    fetchActivePromos().then(setCampaigns).catch(() => {});
+    fetchActivePromos()
+      .then(setCampaigns)
+      .catch(() => setCampaigns([]));
     fetchReviews(5)
       .then((data) => setReviews(data.items))
       .catch(() => {});
@@ -119,60 +121,30 @@ export default function HomeClient() {
 
         <main id="menu" className="menu-sheet">
           <div className="menu-sheet__handle" aria-hidden />
-          <div className="menu-sheet__inner">
-            <section className="home-teaser" aria-labelledby="home-teaser-title">
-              <div className="home-teaser__copy">
-                <p className="home-teaser__eyebrow">BEEFштекс · Коломна</p>
-                <h2 id="home-teaser-title" className="home-teaser__title">
-                  Бургеры с характером — и без случайных ингредиентов
-                </h2>
-                <p className="home-teaser__text">
-                  Мраморная говядина, свежая бриошь и сборка после заказа. Ниже — меню. Если хотите
-                  узнать, как мы готовим и куда доставляем — загляните в «О нас».
-                </p>
-                <div className="home-teaser__actions">
-                  <a href="#menu-grid" className="home-teaser__btn home-teaser__btn--accent">
-                    Смотреть меню
-                  </a>
-                  <Link href="/about" className="home-teaser__btn">
-                    О компании
-                  </Link>
-                </div>
+
+          <HomePromoScreen campaigns={campaigns} />
+
+          <section id="catalog" className="home-catalog" aria-label="Каталог меню">
+            <div className="menu-sheet__inner home-catalog__inner">
+              <MenuCatalog
+                categories={categories}
+                products={products}
+                category={category}
+                tags={tags}
+                sort={sort}
+                loading={loading}
+                onCategoryChange={handleCategoryChange}
+                onTagToggle={toggleTag}
+                onSortChange={setSort}
+                onProductSelect={openProduct}
+              />
+
+              <div className="menu-sheet__footer">
+                <ReviewsSection reviews={reviews} />
+                <BlogPreview posts={blogPosts} />
               </div>
-              <ul className="home-teaser__points">
-                <li>
-                  <strong>Мясо</strong>
-                  <span>Мраморная говядина в основе котлеты</span>
-                </li>
-                <li>
-                  <strong>Сборка</strong>
-                  <span>Жарим и собираем после заказа</span>
-                </li>
-                <li>
-                  <strong>Коломна</strong>
-                  <span>ТРЦ Рио · самовывоз и доставка</span>
-                </li>
-              </ul>
-            </section>
-
-            <MenuCatalog
-              categories={categories}
-              products={products}
-              category={category}
-              tags={tags}
-              sort={sort}
-              loading={loading}
-              onCategoryChange={handleCategoryChange}
-              onTagToggle={toggleTag}
-              onSortChange={setSort}
-              onProductSelect={openProduct}
-            />
-
-            <div className="menu-sheet__footer">
-              <ReviewsSection reviews={reviews} />
-              <BlogPreview posts={blogPosts} />
             </div>
-          </div>
+          </section>
 
           <BrandFooter withMap />
         </main>

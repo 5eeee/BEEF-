@@ -738,10 +738,7 @@ html[data-past-menu="1"] .home-first-screen {
 .home-first-screen .cinema-hero__under *,
 .home-first-screen .cinema-hero__foot,
 .home-first-screen .cinema-hero__social-link,
-.home-first-screen .cinema-hero__more,
-.home-first-screen .menu-hero__copy,
-.home-first-screen .menu-hero__copy *,
-.home-first-screen .menu-hero__scroll {
+.home-first-screen .cinema-hero__more {
   pointer-events: auto;
 }
 
