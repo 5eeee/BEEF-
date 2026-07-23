@@ -54,15 +54,15 @@
   "gallery": [
     {
       "src": "/images/about/photo-1.jpg",
-      "alt": "Команда BEEFштекс"
+      "alt": "Котлета из мраморной говядины на гриле"
     },
     {
-      "src": "/images/about/photo-2.jpg",
-      "alt": "Кухня и бургеры BEEFштекс"
+      "src": "/images/about/kitchen-smash-burger.png",
+      "alt": "Смэш-бургер на раскалённом гриле"
     },
     {
-      "src": "/images/about/photo-3.jpg",
-      "alt": "Корнер BEEFштекс в ТРЦ Рио"
+      "src": "/images/about/ingredients-brioche.png",
+      "alt": "Свежие ингредиенты и бриошь для бургеров"
     }
   ],
   "delivery": {

@@ -19,8 +19,8 @@ export default function AboutClient() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="about-hero__photo"
-            src="/images/about/photo-2.jpg"
-            alt="Бургер BEEFштекс, который готовят на кухне"
+            src="/images/about/photo-1.jpg"
+            alt="Котлета из мраморной говядины на гриле"
           />
           <div className="about-hero__shade" />
           <div className="container-page about-hero__content">
@@ -56,16 +56,16 @@ export default function AboutClient() {
                 <p key={p.slice(0, 48)}>{p}</p>
               ))}
             </div>
-            <figure className="about-story__media">
+            <figure className="about-story__media about-story__media--process">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/about/photo-3.jpg"
-                alt="Корнер BEEFштекс в ТРЦ Рио"
+                src="/images/about/kitchen-smash-burger.png"
+                alt="Смэш-бургер готовят на раскалённом гриле"
                 loading="eager"
               />
               <figcaption>
-                <span>Коломна · с 2023</span>
-                <strong>Готовим для своих</strong>
+                <span>Кухня BEEFштекс</span>
+                <strong>Жарим смэш на заказ</strong>
               </figcaption>
             </figure>
           </div>
@@ -88,9 +88,9 @@ export default function AboutClient() {
         <section className="about-beef" id="pro-beef" aria-labelledby="pro-beef-title">
           <div className="container-page">
             <div className="about-beef__feature">
-              <div className="about-beef__visual">
+              <div className="about-beef__visual about-beef__visual--ingredients">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/products/raw/beef-chizburger-778941.jpg" alt="Ингредиенты бургера с говядиной" loading="lazy" />
+                <img src="/images/about/ingredients-brioche.png" alt="Мраморная говядина, бриошь и свежие ингредиенты для бургера" loading="lazy" />
               </div>
               <div className="about-beef__card">
                 <p className="about-section__eyebrow">{about.proBeef.title}</p>
@@ -125,7 +125,7 @@ export default function AboutClient() {
 
           <div className="about-beef__banner">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/about/photo-1.jpg" alt="Команда BEEFштекс за работой" loading="lazy" />
+            <img src="/images/about/kitchen-smash-burger.png" alt="Смэш-бургер готовят на гриле" loading="lazy" />
             <div className="about-beef__banner-shade" />
             <div className="container-page about-beef__banner-content">
               <p>От мраморной говядины — до горячего гриля</p>
@@ -140,7 +140,7 @@ export default function AboutClient() {
             </div>
             <div className="about-beef__menu-shot">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/hero/hero-king-kong.png" alt="Фирменный бургер BEEFштекс" loading="lazy" />
+              <img src="/images/about/photo-2.jpg" alt="Ферма — источник качественной говядины" loading="lazy" />
             </div>
             <div>
               <p className="about-section__eyebrow">Как готовим</p>
