@@ -3,23 +3,40 @@
 import { useState } from "react";
 import type { Campaign } from "@/lib/types";
 
-const FALLBACK_PROMOS: Campaign[] = [
+type PromoVisual = Campaign & {
+  image: string;
+  badge: string;
+};
+
+const FALLBACK_PROMOS: PromoVisual[] = [
   {
     code: "BEEF300",
-    title: "Скидка на первый заказ",
-    description: "300 ₽ на доставку от 1500 ₽ — укажите код в корзине",
+    title: "−300 ₽",
+    description: "Первый заказ",
+    badge: "−300 ₽",
+    image: "/images/promo/promo-card-beef.png",
   },
   {
     code: "SMASH15",
-    title: "Смэш со скидкой",
-    description: "15% на смэш-бургеры в будние дни до 16:00",
+    title: "−15%",
+    description: "Смэш",
+    badge: "−15%",
+    image: "/images/promo/promo-card-smash.png",
   },
   {
     code: "COMBO2",
-    title: "Комбо для двоих",
-    description: "Два бургера + картофель — фиксированная цена по коду",
+    title: "×2",
+    description: "Комбо",
+    badge: "×2",
+    image: "/images/promo/promo-card-combo.png",
   },
 ];
+
+const CODE_IMAGES: Record<string, string> = {
+  BEEF300: "/images/promo/promo-card-beef.png",
+  SMASH15: "/images/promo/promo-card-smash.png",
+  COMBO2: "/images/promo/promo-card-combo.png",
+};
 
 type Props = {
   campaigns: Campaign[];
@@ -27,7 +44,19 @@ type Props = {
 
 export default function HomePromoScreen({ campaigns }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
-  const promos = (campaigns.length ? campaigns : FALLBACK_PROMOS).slice(0, 3);
+
+  const promos: PromoVisual[] = (campaigns.length ? campaigns : FALLBACK_PROMOS)
+    .slice(0, 3)
+    .map((c, i) => {
+      const fallback = FALLBACK_PROMOS[i] ?? FALLBACK_PROMOS[0];
+      return {
+        ...c,
+        title: campaigns.length ? c.title : fallback.title,
+        description: campaigns.length ? "" : fallback.description,
+        badge: fallback.badge,
+        image: CODE_IMAGES[c.code] || fallback.image,
+      };
+    });
 
   const copyCode = async (code: string) => {
     try {
@@ -41,38 +70,32 @@ export default function HomePromoScreen({ campaigns }: Props) {
 
   return (
     <section id="promo" className="home-promo" aria-labelledby="home-promo-title">
-      <div className="home-promo__media" aria-hidden>
-        <figure className="home-promo__shot home-promo__shot--a">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/promo/promo-smash.png" alt="" loading="lazy" />
-        </figure>
-        <figure className="home-promo__shot home-promo__shot--b">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/promo/promo-combo.png" alt="" loading="lazy" />
-        </figure>
-      </div>
-
-      <div className="home-promo__veil" aria-hidden />
-
       <div className="home-promo__inner">
-        <p className="home-promo__eyebrow">Акции · промокоды</p>
-        <h2 id="home-promo-title" className="home-promo__title">
-          Скидки с характером
-        </h2>
-        <p className="home-promo__lead">
-          Нажмите на код — скопируется. Вставьте в корзине при оформлении. Ниже — полное меню.
-        </p>
+        <header className="home-promo__head">
+          <p className="home-promo__eyebrow">Промокоды</p>
+          <h2 id="home-promo-title" className="home-promo__title">
+            Жми — копируется
+          </h2>
+        </header>
 
-        <ul className="home-promo__list">
+        <ul className="home-promo__grid">
           {promos.map((c) => (
             <li key={c.code}>
-              <button type="button" className="home-promo__deal" onClick={() => copyCode(c.code)}>
-                <span className="home-promo__code">{c.code}</span>
-                <span className="home-promo__deal-copy">
-                  <strong>{c.title}</strong>
-                  <span>{c.description}</span>
+              <button
+                type="button"
+                className={`home-promo__card ${copied === c.code ? "is-copied" : ""}`}
+                onClick={() => copyCode(c.code)}
+                aria-label={`Скопировать промокод ${c.code}`}
+              >
+                <span className="home-promo__card-media" aria-hidden>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={c.image} alt="" loading="lazy" />
+                  <span className="home-promo__badge">{c.badge}</span>
                 </span>
-                <span className="home-promo__hint">{copied === c.code ? "Скопировано" : "Копировать"}</span>
+                <span className="home-promo__card-foot">
+                  <span className="home-promo__code">{c.code}</span>
+                  <span className="home-promo__hint">{copied === c.code ? "Скопировано" : "Копировать"}</span>
+                </span>
               </button>
             </li>
           ))}
