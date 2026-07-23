@@ -1,9 +1,11 @@
 """Payment service tests."""
 
-import pytest
+from datetime import datetime, timezone
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
+
+import pytest
 
 from app.models import Payment, PaymentMethod, PaymentStatus
 from app.schemas import PaymentInitRequest, RefundRequest, YooKassaWebhookPayload
@@ -34,7 +36,12 @@ def db_session():
     return session
 
 
+def _now():
+    return datetime.now(timezone.utc)
+
+
 def make_payment(**overrides) -> Payment:
+    now = _now()
     payment = Payment(
         id=uuid4(),
         order_id=uuid4(),
@@ -44,10 +51,27 @@ def make_payment(**overrides) -> Payment:
         status=PaymentStatus.PROCESSING.value,
         gateway_payment_id="mock_yk_abc123",
         payment_url="http://localhost:8000/api/v1/payments/mock-checkout/test",
+        created_at=now,
+        updated_at=now,
     )
     for key, value in overrides.items():
         setattr(payment, key, value)
     return payment
+
+
+async def _ensure_payment_fields(obj):
+    """Simulate DB defaults after flush/refresh in unit tests."""
+    if not isinstance(obj, Payment):
+        return
+    if getattr(obj, "id", None) is None:
+        obj.id = uuid4()
+    now = _now()
+    if getattr(obj, "created_at", None) is None:
+        obj.created_at = now
+    if getattr(obj, "updated_at", None) is None:
+        obj.updated_at = now
+    else:
+        obj.updated_at = now
 
 
 @pytest.mark.asyncio
@@ -62,11 +86,7 @@ async def test_init_payment_creates_record(db_session, publisher, monkeypatch):
         method=PaymentMethod.CARD,
     )
 
-    async def fake_refresh(obj):
-        if isinstance(obj, Payment) and not getattr(obj, "id", None):
-            obj.id = uuid4()
-
-    db_session.refresh.side_effect = fake_refresh
+    db_session.refresh.side_effect = _ensure_payment_fields
 
     result = await service.init_payment(payload)
 
@@ -81,23 +101,13 @@ async def test_init_payment_creates_record(db_session, publisher, monkeypatch):
 async def test_auto_complete_publishes_event(db_session, publisher, monkeypatch):
     monkeypatch.setattr("app.services.settings.auto_complete_payments", True)
 
-    payment = make_payment()
-    payment.status = PaymentStatus.PROCESSING.value
-
-    async def fake_flush():
-        payment.id = payment.id or uuid4()
-
-    db_session.flush.side_effect = fake_flush
-
-    async def fake_refresh(obj):
-        pass
-
-    db_session.refresh.side_effect = fake_refresh
+    db_session.flush.side_effect = AsyncMock()
+    db_session.refresh.side_effect = _ensure_payment_fields
 
     service = PaymentService(db_session, publisher)
     payload = PaymentInitRequest(
-        order_id=payment.order_id,
-        amount=payment.amount,
+        order_id=uuid4(),
+        amount=Decimal("1500.00"),
         method=PaymentMethod.APPLE_PAY,
     )
 
@@ -113,6 +123,7 @@ async def test_webhook_succeeds_payment(db_session, publisher):
     result_mock = MagicMock()
     result_mock.scalar_one_or_none.return_value = payment
     db_session.execute.return_value = result_mock
+    db_session.refresh.side_effect = _ensure_payment_fields
 
     service = PaymentService(db_session, publisher)
     webhook = YooKassaWebhookPayload(
@@ -137,6 +148,7 @@ async def test_webhook_fails_payment(db_session, publisher):
     result_mock = MagicMock()
     result_mock.scalar_one_or_none.return_value = payment
     db_session.execute.return_value = result_mock
+    db_session.refresh.side_effect = _ensure_payment_fields
 
     service = PaymentService(db_session, publisher)
     webhook = YooKassaWebhookPayload(
@@ -160,6 +172,7 @@ async def test_refund_stub(db_session, publisher):
     result_mock = MagicMock()
     result_mock.scalar_one_or_none.return_value = payment
     db_session.execute.return_value = result_mock
+    db_session.refresh.side_effect = _ensure_payment_fields
 
     service = PaymentService(db_session, publisher)
     result = await service.refund(payment.id, RefundRequest(reason="Customer request"))
