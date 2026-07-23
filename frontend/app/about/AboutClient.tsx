@@ -69,18 +69,27 @@ export default function AboutClient() {
             </figure>
           </div>
 
-          {"gallery" in about && Array.isArray(about.gallery) && about.gallery.length > 0 ? (
-            <div className="container-page about-gallery" aria-label="Команда и кухня BEEFштекс">
-              {about.gallery.map((shot, index) => (
-                <figure key={shot.src} className={`about-gallery__item about-gallery__item--${index + 1}`}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={shot.src} alt={shot.alt} className="about-gallery__img" loading="lazy" />
-                </figure>
-              ))}
+          <div className="container-page about-process">
+            <figure className="about-process__media">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/about/kitchen-smash-burger.png"
+                alt="Смэш-бургер на раскалённом гриле"
+                loading="lazy"
+              />
+            </figure>
+            <div className="about-process__copy">
+              <h3 className="about-process__title">Жарим и собираем после заказа</h3>
+              <p>
+                Котлета уходит на раскалённый гриль только когда заказ уже принят. Так сохраняем
+                сочность мяса, хруст бриоши и температуру всего бургера.
+              </p>
+              <p>
+                На кухне нет конвейера «на потом»: каждый слой собирают сразу после жарки, чтобы
+                бургер дошёл до вас цельным и горячим.
+              </p>
+              <p className="about-process__closing">{about.proNas.paragraphs[2]}</p>
             </div>
-          ) : null}
-          <div className="container-page about-story__closing">
-            <p>{about.proNas.paragraphs[2]}</p>
           </div>
         </section>
 
