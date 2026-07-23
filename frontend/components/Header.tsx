@@ -126,12 +126,13 @@ export default function Header({
   const [address, setAddress] = useState(DEFAULT_ADDR);
   const [addrOpen, setAddrOpen] = useState(false);
   const [addrDraft, setAddrDraft] = useState("");
-  const isHome = pathname === "/";
+  const isSheetPage = pathname === "/" || pathname === "/menu";
 
   const navItems = useMemo(
     () =>
       [
         { href: "/", label: t("home") },
+        { href: "/menu", label: t("menu") },
         { href: "/about", label: t("about") },
         { href: "/contacts", label: t("contacts") },
         { href: "/blog", label: t("blog") },
@@ -352,7 +353,7 @@ export default function Header({
         )}
 
         <div className={`header-actions ${inMenu ? "" : "header-actions--hero"}`}>
-          {isHome && !inMenu ? (
+          {isSheetPage && !inMenu ? (
             <div className="header-prefs" role="group" aria-label="Language and theme">
               <button
                 type="button"
@@ -469,7 +470,7 @@ export default function Header({
             <a href="tel:+79160356777" className="header-mobile-nav__phone" onClick={() => setNavOpen(false)}>
               +7 (916) 035-67-77
             </a>
-            {isHome ? (
+            {isSheetPage ? (
               <button
                 type="button"
                 className="header-mobile-nav__menu"
@@ -480,7 +481,15 @@ export default function Header({
               >
                 {t("toMenu")}
               </button>
-            ) : null}
+            ) : (
+              <Link
+                href="/menu"
+                className="header-mobile-nav__menu"
+                onClick={() => setNavOpen(false)}
+              >
+                {t("toMenu")}
+              </Link>
+            )}
           </nav>
         </div>
       ) : null}
