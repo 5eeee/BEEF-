@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { fetchCompanyInfo } from "@/lib/api";
 import type { CompanyInfo } from "@/lib/types";
 
@@ -16,6 +17,7 @@ const FALLBACK: CompanyInfo = {
 };
 
 export default function Footer() {
+  const pathname = usePathname();
   const [info, setInfo] = useState<CompanyInfo>(FALLBACK);
 
   useEffect(() => {
@@ -24,10 +26,13 @@ export default function Footer() {
       .catch(() => setInfo(FALLBACK));
   }, []);
 
+  // Home uses its own opaque branded footer inside the menu sheet
+  if (pathname === "/") return null;
+
   const phoneHref = info.phone?.replace(/[^\d+]/g, "") || "+74951234567";
 
   return (
-    <footer className="mt-12 border-t border-stone-100 bg-cream/50">
+    <footer className="site-footer mt-12 border-t border-stone-100 bg-cream/50">
       <div className="container-page grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-3">
         <div>
           <p className="text-xl font-bold text-terracotta">{info.name}</p>

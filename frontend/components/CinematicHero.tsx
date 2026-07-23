@@ -85,9 +85,9 @@ export default function CinematicHero() {
 
     const tick = () => {
       setMouse((prev) => {
-        const nx = prev.x + (target.x - prev.x) * 0.08;
-        const ny = prev.y + (target.y - prev.y) * 0.08;
-        if (Math.abs(nx - prev.x) < 0.002 && Math.abs(ny - prev.y) < 0.002) return prev;
+        const nx = prev.x + (target.x - prev.x) * 0.05;
+        const ny = prev.y + (target.y - prev.y) * 0.05;
+        if (Math.abs(nx - prev.x) < 0.0015 && Math.abs(ny - prev.y) < 0.0015) return prev;
         return { x: nx, y: ny };
       });
       raf = requestAnimationFrame(tick);
@@ -111,8 +111,8 @@ export default function CinematicHero() {
       const gamma = typeof e.gamma === "number" ? e.gamma : 0;
       const beta = typeof e.beta === "number" ? e.beta : 45;
       target = {
-        x: clamp(gamma / 28, -1.35, 1.35),
-        y: clamp((beta - 45) / 28, -1.35, 1.35),
+        x: clamp(gamma / 40, -1.15, 1.15),
+        y: clamp((beta - 45) / 40, -1.15, 1.15),
       };
     };
 

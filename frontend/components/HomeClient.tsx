@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import BlogPreview from "@/components/BlogPreview";
 import CartDrawer from "@/components/CartDrawer";
 import CinematicHero from "@/components/CinematicHero";
@@ -8,7 +9,6 @@ import Header from "@/components/Header";
 import MenuCatalog from "@/components/MenuCatalog";
 import ProductModal from "@/components/ProductModal";
 import ReviewsSection from "@/components/ReviewsSection";
-import SiteInfoSection from "@/components/SiteInfoSection";
 import { fetchActivePromos, fetchBlogPosts, fetchCategories, fetchProduct, fetchProducts, fetchReviews } from "@/lib/api";
 import type { BlogPost, Campaign, Category, Product, Review } from "@/lib/types";
 
@@ -51,6 +51,29 @@ export default function HomeClient() {
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
+
+  useEffect(() => {
+    const menu = document.getElementById("menu");
+    if (!menu) return;
+    let raf = 0;
+    const sync = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const rect = menu.getBoundingClientRect();
+        const past = rect.bottom <= window.innerHeight * 0.35;
+        document.documentElement.dataset.pastMenu = past ? "1" : "0";
+      });
+    };
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", sync);
+      delete document.documentElement.dataset.pastMenu;
+    };
+  }, []);
 
   const toggleTag = (tag: string) => {
     setTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
@@ -110,11 +133,32 @@ export default function HomeClient() {
             />
 
             <div className="menu-sheet__footer">
-              <SiteInfoSection />
               <ReviewsSection reviews={reviews} />
               <BlogPreview posts={blogPosts} />
             </div>
           </div>
+
+          <footer className="home-brand-footer" aria-label="Подвал">
+            <div className="home-brand-footer__inner">
+              <div className="home-brand-footer__brand">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/brand/logo-mark.png" alt="" className="home-brand-footer__logo" />
+                <div>
+                  <p className="home-brand-footer__name">
+                    BEEF<span>штекс</span>
+                  </p>
+                  <p className="home-brand-footer__tag">Бургеры с характером · Коломна</p>
+                </div>
+              </div>
+              <nav className="home-brand-footer__nav" aria-label="Подвал">
+                <Link href="/about">О нас</Link>
+                <Link href="/contacts">Контакты</Link>
+                <Link href="/blog">Блог</Link>
+                <a href="tel:+79160356777">+7 (916) 035-67-77</a>
+              </nav>
+              <p className="home-brand-footer__copy">© {new Date().getFullYear()} BEEFштекс</p>
+            </div>
+          </footer>
         </main>
       </div>
 

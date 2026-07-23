@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import EdaProductCard from "@/components/EdaProductCard";
 import { TagIcon } from "@/components/TagIcon";
 import { fetchCart } from "@/lib/api";
@@ -56,6 +56,8 @@ export default function MenuCatalog({
   onProductSelect,
 }: Props) {
   const [qtyById, setQtyById] = useState<Record<string, number>>({});
+  const [catsStuck, setCatsStuck] = useState(false);
+  const catsSentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const sync = () => {
@@ -70,6 +72,17 @@ export default function MenuCatalog({
     sync();
     window.addEventListener("cart-updated", sync);
     return () => window.removeEventListener("cart-updated", sync);
+  }, []);
+
+  useEffect(() => {
+    const sentinel = catsSentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setCatsStuck(!entry.isIntersecting),
+      { root: null, threshold: 0, rootMargin: "-4.25rem 0px 0px 0px" }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
   }, []);
 
   const sections = useMemo(() => {
@@ -213,7 +226,11 @@ export default function MenuCatalog({
         )}
       </aside>
 
-      <div className="ye-panel ye-cats-mobile" aria-label="Категории">
+      <div ref={catsSentinelRef} className="ye-cats-mobile-sentinel" aria-hidden />
+      <div
+        className={`ye-panel ye-cats-mobile ${catsStuck ? "is-stuck" : ""}`}
+        aria-label="Категории"
+      >
         <button
           type="button"
           className={`ye-cats-mobile__item ${category === null ? "is-active" : ""}`}
