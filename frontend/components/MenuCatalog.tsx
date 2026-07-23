@@ -76,11 +76,16 @@ export default function MenuCatalog({
 
   useEffect(() => {
     const sentinel = catsSentinelRef.current;
-    if (!sentinel) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setCatsStuck(!entry.isIntersecting),
-      { root: null, threshold: 0, rootMargin: "-68px 0px 0px 0px" }
-    );
+    if (!sentinel || typeof IntersectionObserver === "undefined") return;
+    let observer: IntersectionObserver;
+    try {
+      observer = new IntersectionObserver(
+        ([entry]) => setCatsStuck(!entry.isIntersecting),
+        { root: null, threshold: 0, rootMargin: "-68px 0px 0px 0px" }
+      );
+    } catch {
+      return;
+    }
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, []);
