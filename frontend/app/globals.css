@@ -3416,20 +3416,21 @@ html[data-theme="light"] .header-shell[data-mode="menu"] .header-addr {
 }
 
 html[data-theme="light"] .header-shell[data-mode="menu"] .header-action {
-  border-color: rgba(20, 17, 15, 0.12);
+  border-color: #111;
   background: #fff;
-  color: #14110f;
-  box-shadow: 0 4px 12px rgba(20, 17, 15, 0.08);
+  color: #111;
+  box-shadow: none;
 }
 
 html[data-theme="light"] .header-shell[data-mode="menu"] .header-action--cart {
   background: #c8e635;
-  border-color: #c8e635;
-  color: #14110f;
+  border-color: #111;
+  color: #111;
 }
 
 html[data-theme="light"] .header-action__badge {
-  box-shadow: 0 0 0 2px #f4f1ea;
+  box-shadow: none;
+  border: 1.5px solid #fff;
 }
 
 html[data-theme="light"] .site-info {
@@ -3514,6 +3515,19 @@ html[data-theme="light"] .home-brand-footer__nav a {
 
 html[data-theme="light"] .home-brand-footer__nav a:hover {
   color: #7a8f10;
+}
+
+html[data-theme="light"] .home-brand-footer__map-label {
+  color: rgba(20, 17, 15, 0.65);
+}
+
+html[data-theme="light"] .home-brand-footer__map {
+  border-color: rgba(20, 17, 15, 0.12);
+  background: #fff;
+}
+
+html[data-theme="light"] .home-brand-footer__map-link {
+  color: #5c6d0c;
 }
 
 html[data-theme="light"] footer,
