@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
+import { useUiPrefs } from "@/components/UiPrefs";
 import { fetchCart } from "@/lib/api";
 import type { Product } from "@/lib/types";
 
@@ -19,13 +20,6 @@ type Props = {
 
 const ADDR_KEY = "beefshteks_delivery_address";
 const DEFAULT_ADDR = "Коломна · доставка / самовывоз";
-
-const NAV = [
-  { href: "/", label: "Главная" },
-  { href: "/about", label: "О нас" },
-  { href: "/contacts", label: "Контакты" },
-  { href: "/blog", label: "Блог" },
-] as const;
 
 function IconUser() {
   return (
@@ -88,6 +82,33 @@ function IconMenu({ open }: { open: boolean }) {
   );
 }
 
+function IconSun() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M12 2.8v2.2M12 19v2.2M2.8 12h2.2M19 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function IconMoon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M18.5 13.2A7.2 7.2 0 0 1 10.8 5.5 7.4 7.4 0 1 0 18.5 13.2z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function Header({
   onCartClick,
   transparent = false,
@@ -96,6 +117,7 @@ export default function Header({
   onSearchSelect,
 }: Props) {
   const pathname = usePathname();
+  const { t, colorMode, toggleLocale, toggleColorMode } = useUiPrefs();
   const [count, setCount] = useState(0);
   const { user, isLoggedIn, openLogin, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -104,6 +126,18 @@ export default function Header({
   const [address, setAddress] = useState(DEFAULT_ADDR);
   const [addrOpen, setAddrOpen] = useState(false);
   const [addrDraft, setAddrDraft] = useState("");
+  const isHome = pathname === "/";
+
+  const navItems = useMemo(
+    () =>
+      [
+        { href: "/", label: t("home") },
+        { href: "/about", label: t("about") },
+        { href: "/contacts", label: t("contacts") },
+        { href: "/blog", label: t("blog") },
+      ] as const,
+    [t]
+  );
 
   useEffect(() => {
     fetchCart()
@@ -171,26 +205,43 @@ export default function Header({
     };
   }, [navOpen]);
 
-  const isDark = theme === "dark";
+  const prefDark = colorMode === "dark";
+  const isDark = theme === "dark" ? prefDark : theme === "light" ? false : prefDark;
+  // Home uses theme="dark" prop but colorMode can force light header/menu chrome
+  const useLightChrome = colorMode === "light";
   const inMenu = variant === "menu" || (variant === "auto" && progress > 0.5);
+
   const bg = transparent
     ? inMenu
-      ? "rgba(51, 51, 51, 0.96)"
-      : isDark
+      ? useLightChrome
+        ? "rgba(247, 243, 238, 0.96)"
+        : "rgba(51, 51, 51, 0.96)"
+      : useLightChrome
         ? progress < 0.02
           ? "transparent"
-          : `rgba(0, 0, 0, ${Math.min(0.7, progress * 0.9 + 0.15)})`
-        : `rgba(247, 243, 238, ${0.55 + progress * 0.42})`
-    : isDark
-      ? "rgba(12, 12, 12, 0.94)"
-      : "rgba(255, 255, 255, 0.96)";
+          : `rgba(247, 243, 238, ${0.55 + progress * 0.42})`
+        : isDark
+          ? progress < 0.02
+            ? "transparent"
+            : `rgba(0, 0, 0, ${Math.min(0.7, progress * 0.9 + 0.15)})`
+          : `rgba(247, 243, 238, ${0.55 + progress * 0.42})`
+    : useLightChrome
+      ? "rgba(255, 255, 255, 0.96)"
+      : isDark
+        ? "rgba(12, 12, 12, 0.94)"
+        : "rgba(255, 255, 255, 0.96)";
+
   const border = transparent
     ? inMenu || progress > 0.05
-      ? "rgba(255, 255, 255, 0.08)"
+      ? useLightChrome
+        ? "rgba(0, 0, 0, 0.08)"
+        : "rgba(255, 255, 255, 0.08)"
       : "transparent"
-    : isDark
-      ? "rgba(255, 255, 255, 0.08)"
-      : "rgba(0, 0, 0, 0.06)";
+    : useLightChrome
+      ? "rgba(0, 0, 0, 0.06)"
+      : isDark
+        ? "rgba(255, 255, 255, 0.08)"
+        : "rgba(0, 0, 0, 0.06)";
   const blur = transparent ? (inMenu ? 14 : 8 + progress * 10) : 12;
 
   const saveAddress = () => {
@@ -211,7 +262,7 @@ export default function Header({
 
   return (
     <header
-      className={`header-shell ${transparent ? "fixed inset-x-0 top-0 z-50" : "sticky top-0 z-40"}`}
+      className={`header-shell ${transparent ? "fixed inset-x-0 top-0 z-50" : "sticky top-0 z-40"} ${useLightChrome ? "is-light" : ""}`}
       data-mode={inMenu ? "menu" : "hero"}
       style={{
         backgroundColor: bg,
@@ -283,7 +334,7 @@ export default function Header({
         ) : (
           <>
             <nav className="header-nav" aria-label="Основное меню">
-              {NAV.map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -301,11 +352,32 @@ export default function Header({
         )}
 
         <div className={`header-actions ${inMenu ? "" : "header-actions--hero"}`}>
+          {isHome ? (
+            <div className="header-prefs" role="group" aria-label="Language and theme">
+              <button
+                type="button"
+                className="header-pref"
+                onClick={toggleLocale}
+                aria-label={t("lang")}
+              >
+                {t("lang")}
+              </button>
+              <button
+                type="button"
+                className="header-pref header-pref--icon"
+                onClick={toggleColorMode}
+                aria-label={colorMode === "dark" ? t("themeToLight") : t("themeToDark")}
+              >
+                {colorMode === "dark" ? <IconSun /> : <IconMoon />}
+              </button>
+            </div>
+          ) : null}
+
           {!inMenu ? (
             <button
               type="button"
               className="header-action header-action--nav"
-              aria-label={navOpen ? "Закрыть меню" : "Открыть меню"}
+              aria-label={navOpen ? t("closeNav") : t("openNav")}
               aria-expanded={navOpen}
               onClick={() => setNavOpen((v) => !v)}
             >
@@ -319,10 +391,10 @@ export default function Header({
                 type="button"
                 onClick={() => setMenuOpen((v) => !v)}
                 className="header-action header-action--user"
-                aria-label="Личный кабинет"
+                aria-label={t("cabinet")}
               >
                 <IconUser />
-                <span className="header-action__label">Кабинет</span>
+                <span className="header-action__label">{t("cabinet")}</span>
               </button>
               {menuOpen && (
                 <>
@@ -355,9 +427,9 @@ export default function Header({
               )}
             </div>
           ) : (
-            <button type="button" onClick={openLogin} className="header-action header-action--user" aria-label="Войти">
+            <button type="button" onClick={openLogin} className="header-action header-action--user" aria-label={t("login")}>
               <IconUser />
-              <span className="header-action__label">Войти</span>
+              <span className="header-action__label">{t("login")}</span>
             </button>
           )}
 
@@ -365,11 +437,11 @@ export default function Header({
             type="button"
             onClick={onCartClick}
             className="header-action header-action--cart"
-            aria-label="Корзина"
+            aria-label={t("cart")}
             data-cart-target
           >
             <IconCart />
-            <span className="header-action__label">Корзина</span>
+            <span className="header-action__label">{t("cart")}</span>
             {count > 0 ? <span className="header-action__badge">{count}</span> : null}
           </button>
         </div>
@@ -384,7 +456,7 @@ export default function Header({
             onClick={() => setNavOpen(false)}
           />
           <nav className="header-mobile-nav__panel">
-            {NAV.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -397,7 +469,7 @@ export default function Header({
             <a href="tel:+79160356777" className="header-mobile-nav__phone" onClick={() => setNavOpen(false)}>
               +7 (916) 035-67-77
             </a>
-            {pathname === "/" ? (
+            {isHome ? (
               <button
                 type="button"
                 className="header-mobile-nav__menu"
@@ -406,7 +478,7 @@ export default function Header({
                   document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
               >
-                К меню
+                {t("toMenu")}
               </button>
             ) : null}
           </nav>

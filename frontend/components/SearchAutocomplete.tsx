@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useUiPrefs } from "@/components/UiPrefs";
 import { searchProducts } from "@/lib/api";
 import type { Product } from "@/lib/types";
 
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export default function SearchAutocomplete({ onSelect }: Props) {
+  const { t } = useUiPrefs();
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<Product[]>([]);
   const [open, setOpen] = useState(false);
@@ -45,7 +47,7 @@ export default function SearchAutocomplete({ onSelect }: Props) {
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
-        placeholder="Найти блюдо"
+        placeholder={t("search")}
         className="eda-search"
       />
       {open && hits.length > 0 && (

@@ -1,13 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-
-const SLIDES = [
-  { word: "СОЧНЕЕ", tag: "Мраморная говядина · честные порции" },
-  { word: "МОЩНЕЕ", tag: "Двойная котлета и характер" },
-  { word: "БОЛЬШЕ", tag: "Бургеры с характером" },
-] as const;
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useUiPrefs } from "@/components/UiPrefs";
 
 const SOCIAL = [
   { href: "https://t.me/BEEFshteksDelivery", label: "Telegram", id: "tg", icon: "/images/social/telegram.svg" },
@@ -18,7 +13,7 @@ const SOCIAL = [
 function renderWordPart(text: string, allowLogo: boolean) {
   let usedLogo = !allowLogo;
   return text.split("").map((ch, i) => {
-    if (!usedLogo && (ch === "О" || ch === "о")) {
+    if (!usedLogo && (ch === "О" || ch === "о" || ch === "O" || ch === "o")) {
       usedLogo = true;
       return (
         // eslint-disable-next-line @next/next/no-img-element
@@ -44,6 +39,7 @@ const AUTO_MS = 5200;
 type Tilt = { x: number; y: number };
 
 export default function CinematicHero() {
+  const { t } = useUiPrefs();
   const ref = useRef<HTMLElement>(null);
   const [ready, setReady] = useState(false);
   const [slide, setSlide] = useState(0);
@@ -52,11 +48,21 @@ export default function CinematicHero() {
   const [scroll, setScroll] = useState(0);
   const [compact, setCompact] = useState(false);
 
-  const next = useCallback(() => setSlide((s) => (s + 1) % SLIDES.length), []);
+  const slides = useMemo(
+    () =>
+      [
+        { word: t("slide0Word"), tag: t("slide0Tag") },
+        { word: t("slide1Word"), tag: t("slide1Tag") },
+        { word: t("slide2Word"), tag: t("slide2Tag") },
+      ] as const,
+    [t]
+  );
+
+  const next = useCallback(() => setSlide((s) => (s + 1) % slides.length), [slides.length]);
 
   useEffect(() => {
-    const t = window.setTimeout(() => setReady(true), 80);
-    return () => clearTimeout(t);
+    const tmr = window.setTimeout(() => setReady(true), 80);
+    return () => clearTimeout(tmr);
   }, []);
 
   useEffect(() => {
@@ -102,7 +108,6 @@ export default function CinematicHero() {
 
     const onOrientation = (e: DeviceOrientationEvent) => {
       usingGyro = true;
-      // gamma: left/right (-90..90), beta: front/back (0..180 typical when holding phone)
       const gamma = typeof e.gamma === "number" ? e.gamma : 0;
       const beta = typeof e.beta === "number" ? e.beta : 45;
       target = {
@@ -143,7 +148,6 @@ export default function CinematicHero() {
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    // Desktop: mouse. Mobile: gyroscope (iOS needs a user gesture for permission)
     const isTouch = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
     if (isTouch) {
       const DOE = DeviceOrientationEvent as unknown as {
@@ -176,6 +180,10 @@ export default function CinematicHero() {
     return () => clearInterval(id);
   }, [next, reduce]);
 
+  useEffect(() => {
+    setSlide((s) => Math.min(s, slides.length - 1));
+  }, [slides.length]);
+
   const mx = reduce ? 0 : mouse.x;
   const my = reduce ? 0 : mouse.y;
   const sc = reduce ? 0 : scroll;
@@ -200,11 +208,11 @@ export default function CinematicHero() {
         style={{ transform: `translate3d(${textX}px, ${textY}px, 0)` }}
         aria-hidden
       >
-        {SLIDES.map((s, i) => {
+        {slides.map((s, i) => {
           if (compact) {
             return (
               <div
-                key={s.word}
+                key={`${s.word}-${i}`}
                 className={`cinema-hero__word cinema-hero__word--solid ${i === slide ? "is-active" : ""}`}
               >
                 <span className="cinema-hero__word-full">{renderWordPart(s.word, true)}</span>
@@ -214,10 +222,10 @@ export default function CinematicHero() {
           const h = Math.ceil(s.word.length / 2);
           const left = s.word.slice(0, h);
           const right = s.word.slice(h);
-          const logoInLeft = /[Оо]/.test(left);
+          const logoInLeft = /[ОоOo]/.test(left);
           return (
             <div
-              key={s.word}
+              key={`${s.word}-${i}`}
               className={`cinema-hero__word ${i === slide ? "is-active" : ""}`}
             >
               <span className="cinema-hero__word-left">{renderWordPart(left, true)}</span>
@@ -250,7 +258,7 @@ export default function CinematicHero() {
       </div>
 
       <div className="cinema-hero__under">
-        <p className="cinema-hero__tagline">{SLIDES[slide].tag}</p>
+        <p className="cinema-hero__tagline">{slides[slide].tag}</p>
         <button
           type="button"
           className="cinema-hero__menu-btn"
@@ -258,7 +266,7 @@ export default function CinematicHero() {
             document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
           }}
         >
-          Меню
+          {t("menu")}
         </button>
       </div>
 
@@ -281,8 +289,8 @@ export default function CinematicHero() {
 
         <div className="cinema-hero__foot-spacer" aria-hidden />
 
-        <Link href="/about#delivery" className="cinema-hero__more">
-          Доставка <span aria-hidden>→</span>
+        <Link href="/about" className="cinema-hero__more">
+          {t("aboutCta")} <span aria-hidden>→</span>
         </Link>
       </div>
     </section>
