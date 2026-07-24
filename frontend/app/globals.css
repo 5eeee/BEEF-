@@ -478,7 +478,7 @@ html {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  max-width: 16rem;
+  max-width: min(18rem, 38vw);
   min-height: 2.55rem;
   padding: 0.45rem 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -488,39 +488,373 @@ html {
   font-size: 0.82rem;
   font-weight: 500;
   cursor: pointer;
+  flex-shrink: 1;
 }
 
 .header-addr:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.header-addr-input {
-  width: 100%;
-  min-height: 2.5rem;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0.75rem;
-  background: rgba(0, 0, 0, 0.35);
-  color: #fff;
-  font-size: 0.9rem;
-  outline: none;
+.header-addr__text {
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.header-addr-input:focus {
-  border-color: rgba(200, 230, 53, 0.55);
+/* Delivery address modal (pick ? map) */
+.addr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
 }
 
-.header-addr-save {
-  width: 100%;
-  margin-top: 0.55rem;
-  min-height: 2.4rem;
-  border: none;
-  border-radius: 0.75rem;
-  background: #c8e635;
-  color: #14110f;
-  font-size: 0.88rem;
-  font-weight: 700;
+.addr-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.62);
   cursor: pointer;
+}
+
+.addr-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 28rem);
+  max-height: min(90svh, 40rem);
+  overflow: auto;
+  padding: 1rem 1rem 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.25rem;
+  background: #1c1c1c;
+  color: #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.addr-modal__panel--map {
+  width: min(100%, 40rem);
+  max-height: min(92svh, 44rem);
+  padding: 1.1rem 1.15rem 1.2rem;
+}
+
+.addr-modal__pick-field {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 3.2rem;
+  padding: 0.35rem 0.45rem 0.35rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  background: #141414;
+}
+
+.addr-modal__pin {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(232, 93, 4, 0.18);
+  color: #e85d04;
+}
+
+.addr-modal__pick-input {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.4rem 0;
+}
+
+.addr-modal__pick-input .is-placeholder {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.addr-modal__go {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+}
+
+.addr-modal__saved {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+
+.addr-modal__saved-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.95rem 0.25rem;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.addr-modal__saved li:first-child .addr-modal__saved-item {
+  border-top: 0;
+}
+
+.addr-modal__saved-item:hover strong {
+  color: var(--beef-accent);
+}
+
+.addr-modal__dot {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.2rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+}
+
+.addr-modal__saved-copy {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.addr-modal__saved-copy strong {
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.addr-modal__saved-copy span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.addr-modal__empty,
+.addr-modal__note {
+  margin: 0.85rem 0 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.addr-modal__map-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.addr-modal__map-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.addr-modal__close {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.addr-modal__map-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.addr-modal__search {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 3rem;
+  padding: 0 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.9rem;
+  background: #141414;
+}
+
+.addr-modal__search-icon {
+  color: rgba(255, 255, 255, 0.45);
+  display: grid;
+}
+
+.addr-modal__search input {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  padding: 0.65rem 0;
+}
+
+.addr-modal__clear {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.addr-modal__ok {
+  min-height: 3rem;
+  min-width: 4.25rem;
+  padding: 0 1.1rem;
+  border: 0;
+  border-radius: 0.9rem;
+  background: var(--beef-accent);
+  color: #111;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.addr-modal__ok:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.addr-modal__suggest {
+  margin: 0.55rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.2rem;
+  max-height: 7.5rem;
+  overflow: auto;
+}
+
+.addr-modal__suggest button {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  text-align: left;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.addr-modal__suggest button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.addr-modal__map-wrap {
+  margin-top: 0.85rem;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d0d0d;
+}
+
+.addr-modal__map {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 42vh, 340px);
+  border: 0;
+}
+
+.addr-modal__back {
+  margin-top: 0.85rem;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.addr-modal__back:hover {
+  color: var(--beef-accent);
+}
+
+@media (max-width: 640px) {
+  .addr-modal {
+    place-items: end center;
+    padding: 0;
+  }
+
+  .addr-modal__panel,
+  .addr-modal__panel--map {
+    width: 100%;
+    max-height: 92svh;
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+
+  .header-addr {
+    max-width: min(11rem, 32vw);
+  }
+}
+
+html[data-theme="light"] .addr-modal__panel {
+  background: #f7f3ee;
+  color: #14110f;
+  border-color: rgba(20, 17, 15, 0.08);
+}
+
+html[data-theme="light"] .addr-modal__pick-field,
+html[data-theme="light"] .addr-modal__search {
+  background: #fff;
+  border-color: rgba(20, 17, 15, 0.12);
+}
+
+html[data-theme="light"] .addr-modal__pick-input {
+  color: #14110f;
+}
+
+html[data-theme="light"] .addr-modal__pick-input .is-placeholder {
+  color: rgba(20, 17, 15, 0.45);
+}
+
+html[data-theme="light"] .addr-modal__saved-item {
+  border-top-color: rgba(20, 17, 15, 0.08);
+}
+
+html[data-theme="light"] .addr-modal__saved-copy span,
+html[data-theme="light"] .addr-modal__note,
+html[data-theme="light"] .addr-modal__empty,
+html[data-theme="light"] .addr-modal__back {
+  color: rgba(20, 17, 15, 0.5);
+}
+
+html[data-theme="light"] .addr-modal__suggest button {
+  color: rgba(20, 17, 15, 0.75);
+}
+
+html[data-theme="light"] .addr-modal__close {
+  background: rgba(20, 17, 15, 0.06);
+  color: #14110f;
 }
 
 .header-search {

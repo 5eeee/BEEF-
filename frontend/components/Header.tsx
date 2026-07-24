@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
+import DeliveryAddressModal from "@/components/DeliveryAddressModal";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import { useUiPrefs } from "@/components/UiPrefs";
+import { DEFAULT_ADDR, readCurrentAddress } from "@/lib/delivery-address";
 import { fetchCart } from "@/lib/api";
 import type { Product } from "@/lib/types";
 
@@ -17,9 +19,6 @@ type Props = {
   variant?: "auto" | "hero" | "menu";
   onSearchSelect?: (product: Product) => void;
 };
-
-const ADDR_KEY = "beefshteks_delivery_address";
-const DEFAULT_ADDR = "Коломна · доставка / самовывоз";
 
 function IconUser() {
   return (
@@ -125,7 +124,6 @@ export default function Header({
   const [progress, setProgress] = useState(0);
   const [address, setAddress] = useState(DEFAULT_ADDR);
   const [addrOpen, setAddrOpen] = useState(false);
-  const [addrDraft, setAddrDraft] = useState("");
   const isHome = pathname === "/";
 
   const navItems = useMemo(
@@ -154,12 +152,7 @@ export default function Header({
   }, []);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(ADDR_KEY);
-      if (saved) setAddress(saved);
-    } catch {
-      /* ignore */
-    }
+    setAddress(readCurrentAddress());
   }, []);
 
   useEffect(() => {
@@ -245,17 +238,6 @@ export default function Header({
         : "rgba(0, 0, 0, 0.06)";
   const blur = transparent ? (inMenu ? 14 : 8 + progress * 10) : 12;
 
-  const saveAddress = () => {
-    const next = addrDraft.trim() || DEFAULT_ADDR;
-    setAddress(next);
-    try {
-      localStorage.setItem(ADDR_KEY, next);
-    } catch {
-      /* ignore */
-    }
-    setAddrOpen(false);
-  };
-
   const navActive = (href: string) => {
     if (href === "/") return pathname === "/";
     if (href === "/#menu") return pathname === "/" || pathname.startsWith("/menu/");
@@ -299,46 +281,16 @@ export default function Header({
               />
             </div>
 
-            <div className="relative hidden md:block">
-              <button
-                type="button"
-                className="header-addr"
-                onClick={() => {
-                  setAddrDraft(address === DEFAULT_ADDR ? "" : address);
-                  setAddrOpen((v) => !v);
-                }}
-              >
-                <IconPin />
-                <span className="max-w-[14rem] truncate">{address}</span>
-              </button>
-              {addrOpen && (
-                <>
-                  <button
-                    type="button"
-                    className="fixed inset-0 z-10"
-                    aria-label="Закрыть"
-                    onClick={() => setAddrOpen(false)}
-                  />
-                  <div className="absolute right-0 top-full z-20 mt-2 w-80 rounded-2xl border border-white/10 bg-[#1a1a1a] p-3 shadow-xl">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/40">
-                      Адрес доставки
-                    </p>
-                    <input
-                      value={addrDraft}
-                      onChange={(e) => setAddrDraft(e.target.value)}
-                      placeholder="Улица, дом / район Коломны"
-                      className="header-addr-input"
-                    />
-                    <button type="button" className="header-addr-save" onClick={saveAddress}>
-                      Сохранить
-                    </button>
-                    <p className="mt-2 text-xs leading-relaxed text-white/40">
-                      Курьер по Коломне — 300 ₽, от 2000 ₽ бесплатно. Самовывоз: ТРЦ Рио, фудкорт.
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
+            <button
+              type="button"
+              className="header-addr"
+              onClick={() => setAddrOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={addrOpen}
+            >
+              <IconPin />
+              <span className="header-addr__text">{address}</span>
+            </button>
           </>
         ) : (
           <>
@@ -501,6 +453,12 @@ export default function Header({
           </nav>
         </div>
       ) : null}
+
+      <DeliveryAddressModal
+        open={addrOpen}
+        onClose={() => setAddrOpen(false)}
+        onConfirm={(next) => setAddress(next)}
+      />
     </header>
   );
 }
