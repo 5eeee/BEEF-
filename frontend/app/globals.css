@@ -1308,16 +1308,17 @@ html[data-theme="light"] .home-catalog {
   position: absolute;
   z-index: 0;
   left: 50%;
-  top: 0;
-  width: min(72%, 380px);
+  top: 50%;
+  /* Larger than burger, centered ? only a thin rim peeks out */
+  width: 122%;
+  max-width: none;
   height: auto;
-  /* ~30% peeks above the burger, ~70% hidden behind it */
-  transform: translate(-50%, -30%);
+  transform: translate(-50%, -50%);
   object-fit: contain;
   filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
   user-select: none;
   pointer-events: none;
-  opacity: 0.92;
+  opacity: 0.9;
 }
 
 .cinema-hero__word-left::before,
@@ -1352,9 +1353,9 @@ html[data-theme="light"] .home-catalog {
 
 .cinema-hero__word-gap {
   flex: 0 0 auto;
-  width: min(58vw, 520px);
-  min-width: min(58vw, 520px);
-  max-width: min(58vw, 520px);
+  width: min(70vw, 640px);
+  min-width: min(70vw, 640px);
+  max-width: min(70vw, 640px);
 }
 
 .cinema-hero__burger-wrap {
@@ -1362,7 +1363,7 @@ html[data-theme="light"] .home-catalog {
   z-index: 5;
   left: 50%;
   top: 46%;
-  width: min(58vw, 520px);
+  width: min(70vw, 640px);
   transform: translate(-50%, -50%);
   will-change: transform;
   transition: none;
@@ -1404,7 +1405,7 @@ html[data-theme="light"] .home-catalog {
   position: absolute;
   z-index: 30;
   left: 50%;
-  top: calc(46% + min(28vw, 255px));
+  top: calc(46% + min(34vw, 310px));
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -1677,19 +1678,19 @@ html[data-theme="light"] .home-catalog {
     font-size: clamp(2.2rem, 13vw, 3.4rem);
   }
 
-  /* Mobile: burger fills width; logo peeks above */
+  /* Mobile: bigger burger; logo centered behind with thin peek */
   .cinema-hero__burger-wrap {
-    width: min(92vw, 520px);
+    width: min(96vw, 560px);
     top: 52%;
     z-index: 4;
   }
 
   .cinema-hero__burger-logo {
-    width: min(68%, 300px);
+    width: 124%;
   }
 
   .cinema-hero__under {
-    top: calc(52% + min(35vw, 205px));
+    top: calc(52% + min(42vw, 250px));
     gap: 0.85rem;
     width: min(92vw, 28rem);
   }
@@ -1723,11 +1724,11 @@ html[data-theme="light"] .home-catalog {
 
   .cinema-hero__burger-wrap {
     top: 53%;
-    width: min(94vw, 460px);
+    width: min(98vw, 520px);
   }
 
   .cinema-hero__under {
-    top: calc(53% + min(36vw, 190px));
+    top: calc(53% + min(44vw, 235px));
   }
 }
 
