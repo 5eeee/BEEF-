@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useUiPrefs } from "@/components/UiPrefs";
 
 type Props = {
   /** When true, map is the last element (home). When false, keep compact footer for other pages. */
@@ -9,8 +10,10 @@ type Props = {
 };
 
 export default function BrandFooter({ withMap = true, className = "" }: Props) {
+  const { t } = useUiPrefs();
+
   return (
-    <footer className={`home-brand-footer ${className}`.trim()} aria-label="Подвал">
+    <footer className={`home-brand-footer ${className}`.trim()} aria-label="Footer">
       <div className="home-brand-footer__inner">
         <div className="home-brand-footer__brand">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -19,20 +22,18 @@ export default function BrandFooter({ withMap = true, className = "" }: Props) {
             <p className="home-brand-footer__name">
               BEEF<span>штекс</span>
             </p>
-            <p className="home-brand-footer__tag">Бургеры с характером · Коломна</p>
+            <p className="home-brand-footer__tag">{t("footerTag")}</p>
           </div>
         </div>
-        <nav className="home-brand-footer__nav" aria-label="Подвал">
-          <Link href="/">Главная</Link>
-          <Link href="/#menu">Меню</Link>
-          <Link href="/about">О нас</Link>
-          <Link href="/contacts">Контакты</Link>
-          <Link href="/blog">Блог</Link>
+        <nav className="home-brand-footer__nav" aria-label={t("footerNav")}>
+          <Link href="/">{t("home")}</Link>
+          <Link href="/#menu">{t("menu")}</Link>
+          <Link href="/about">{t("about")}</Link>
+          <Link href="/contacts">{t("contacts")}</Link>
+          <Link href="/blog">{t("blog")}</Link>
           <a href="tel:+79160356777">+7 (916) 035-67-77</a>
         </nav>
-        <p className="home-brand-footer__addr">
-          Коломна, ул. Октябрьской Революции, 362 · ТРЦ Рио, фудкорт
-        </p>
+        <p className="home-brand-footer__addr">{t("footerAddr")}</p>
         <div className="home-brand-footer__meta">
           <a
             className="home-brand-footer__map-link"
@@ -40,7 +41,7 @@ export default function BrandFooter({ withMap = true, className = "" }: Props) {
             target="_blank"
             rel="noreferrer"
           >
-            Открыть BEEFштекс в Яндекс Картах
+            {t("openOnMaps")}
           </a>
           <p className="home-brand-footer__copy">© {new Date().getFullYear()} BEEFштекс</p>
         </div>

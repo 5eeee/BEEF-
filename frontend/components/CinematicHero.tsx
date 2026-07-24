@@ -187,6 +187,19 @@ export default function CinematicHero() {
       <div className="cinema-hero__vignette" aria-hidden />
       <div className="cinema-hero__glow" aria-hidden />
 
+      {/* Logo on the furthest back plane (below text and burger) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/brand/logo-mark.png"
+        alt=""
+        className="cinema-hero__burger-logo"
+        aria-hidden
+        draggable={false}
+        style={{
+          transform: `translate3d(calc(-50% + ${burgerX * 0.25}px), calc(-50% + ${burgerY * 0.25}px), 0)`,
+        }}
+      />
+
       <div
         className="cinema-hero__type"
         style={{ transform: `translate3d(${textX}px, ${textY}px, 0)` }}
@@ -226,14 +239,6 @@ export default function CinematicHero() {
           transform: `translate(calc(-50% + ${burgerX}px), calc(-50% + ${burgerY}px)) rotate(${burgerRot}deg) scale(${burgerScale})`,
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/brand/logo-mark.png"
-          alt=""
-          className="cinema-hero__burger-logo"
-          aria-hidden
-          draggable={false}
-        />
         <div className="cinema-hero__burger-shadow" aria-hidden />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -250,15 +255,20 @@ export default function CinematicHero() {
 
       <div className="cinema-hero__under">
         <p className="cinema-hero__tagline">{slides[slide].tag}</p>
-        <button
-          type="button"
-          className="cinema-hero__menu-btn"
-          onClick={() => {
-            document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }}
-        >
-          {t("menu")}
-        </button>
+        <div className="cinema-hero__cta-row">
+          <button
+            type="button"
+            className="cinema-hero__menu-btn"
+            onClick={() => {
+              document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          >
+            {t("goToMenu")}
+          </button>
+          <Link href="/about" className="cinema-hero__more">
+            {t("aboutCta")}
+          </Link>
+        </div>
       </div>
 
       <div className="cinema-hero__foot">
@@ -277,12 +287,7 @@ export default function CinematicHero() {
             </a>
           ))}
         </div>
-
         <div className="cinema-hero__foot-spacer" aria-hidden />
-
-        <Link href="/about" className="cinema-hero__more">
-          {t("aboutCta")} <span aria-hidden>→</span>
-        </Link>
       </div>
     </section>
   );

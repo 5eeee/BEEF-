@@ -23,18 +23,42 @@ app.include_router(admin_router)
 PROMO_CODES = {
     "WELCOME10": {"type": "percent", "value": Decimal("10")},
     "BEEF200": {"type": "fixed", "value": Decimal("200")},
+    "SMASH15": {"type": "percent", "value": Decimal("15")},
+    "COMBO2": {"type": "percent", "value": Decimal("20")},
+    "SPICY10": {"type": "percent", "value": Decimal("10")},
+    "DOUBLE20": {"type": "percent", "value": Decimal("20")},
 }
 
 ACTIVE_CAMPAIGNS = [
     {
-        "title": "Скидка 10% на первый заказ",
-        "description": "Промокод WELCOME10 при оформлении заказа",
+        "title": "−10% на первый заказ",
+        "description": "Первый заказ",
         "code": "WELCOME10",
     },
     {
-        "title": "200 ₽ на заказ от 1500 ₽",
-        "description": "Промокод BEEF200 — фиксированная скидка",
+        "title": "−200 ₽ от 1500 ₽",
+        "description": "На заказ от 1500 ₽",
         "code": "BEEF200",
+    },
+    {
+        "title": "−15% на смэш",
+        "description": "Смэш-бургеры",
+        "code": "SMASH15",
+    },
+    {
+        "title": "Комбо выгоднее",
+        "description": "Комбо-наборы",
+        "code": "COMBO2",
+    },
+    {
+        "title": "−10% на острое",
+        "description": "Острые бургеры",
+        "code": "SPICY10",
+    },
+    {
+        "title": "−20% на двойные",
+        "description": "Двойные бургеры",
+        "code": "DOUBLE20",
     },
 ]
 

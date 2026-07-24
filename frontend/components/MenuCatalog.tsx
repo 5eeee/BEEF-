@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import EdaProductCard from "@/components/EdaProductCard";
 import { TagIcon } from "@/components/TagIcon";
+import { useUiPrefs } from "@/components/UiPrefs";
 import { fetchCart } from "@/lib/api";
 import type { Category, Product } from "@/lib/types";
 
@@ -13,23 +14,12 @@ type Props = {
   tags: string[];
   sort: string;
   loading: boolean;
+  filtering?: boolean;
   onCategoryChange: (slug: string | null) => void;
   onTagToggle: (tag: string) => void;
   onSortChange: (sort: string) => void;
   onProductSelect: (product: Product) => void;
 };
-
-const TAGS = [
-  { id: "spicy", label: "Острое" },
-  { id: "vegetarian", label: "Вегги" },
-  { id: "new", label: "Новинка" },
-] as const;
-
-const SORTS = [
-  { id: "popularity", label: "Популярные" },
-  { id: "price_asc", label: "Сначала дешевле" },
-  { id: "price_desc", label: "Сначала дороже" },
-] as const;
 
 function scrollToCategory(slug: string | null) {
   if (!slug) {
@@ -50,15 +40,44 @@ export default function MenuCatalog({
   tags,
   sort,
   loading,
+  filtering = false,
   onCategoryChange,
   onTagToggle,
   onSortChange,
   onProductSelect,
 }: Props) {
+  const { t } = useUiPrefs();
   const [qtyById, setQtyById] = useState<Record<string, number>>({});
   const [catsStuck, setCatsStuck] = useState(false);
   const catsSentinelRef = useRef<HTMLDivElement>(null);
   const mobileCatsRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef(category);
+  const lockSpyUntil = useRef(0);
+  const userPickRef = useRef(false);
+
+  const TAGS = useMemo(
+    () =>
+      [
+        { id: "spicy", label: t("tagSpicy") },
+        { id: "vegetarian", label: t("tagVeg") },
+        { id: "new", label: t("tagNew") },
+      ] as const,
+    [t]
+  );
+
+  const SORTS = useMemo(
+    () =>
+      [
+        { id: "popularity", label: t("sortPopular") },
+        { id: "price_asc", label: t("sortCheap") },
+        { id: "price_desc", label: t("sortExpensive") },
+      ] as const,
+    [t]
+  );
+
+  useEffect(() => {
+    categoryRef.current = category;
+  }, [category]);
 
   useEffect(() => {
     const sync = () => {
@@ -108,6 +127,7 @@ export default function MenuCatalog({
 
     let frame = 0;
     const syncActiveCategory = () => {
+      if (Date.now() < lockSpyUntil.current) return;
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const nodes = sections
@@ -117,8 +137,9 @@ export default function MenuCatalog({
 
         const headerBottom = document.querySelector<HTMLElement>(".header-shell")?.getBoundingClientRect().bottom ?? 0;
         const referenceLine = Math.max(16, headerBottom + 18);
+        const current = categoryRef.current;
         if (nodes[0].node.getBoundingClientRect().top > referenceLine) {
-          if (category !== null) onCategoryChange(null);
+          if (current !== null) onCategoryChange(null);
           return;
         }
 
@@ -126,7 +147,7 @@ export default function MenuCatalog({
           (closest, section) => (section.node.getBoundingClientRect().top <= referenceLine ? section : closest),
           nodes[0]
         );
-        if (active.slug !== category) onCategoryChange(active.slug);
+        if (active.slug !== current) onCategoryChange(active.slug);
       });
     };
 
@@ -138,9 +159,11 @@ export default function MenuCatalog({
       window.removeEventListener("scroll", syncActiveCategory);
       window.removeEventListener("resize", syncActiveCategory);
     };
-  }, [loading, sections, category, onCategoryChange]);
+  }, [loading, sections, onCategoryChange]);
 
   useEffect(() => {
+    if (!userPickRef.current) return;
+    userPickRef.current = false;
     const activeButton = mobileCatsRef.current?.querySelector<HTMLElement>(
       `[data-category="${category ?? "all"}"]`
     );
@@ -148,20 +171,22 @@ export default function MenuCatalog({
   }, [category]);
 
   const selectCategory = (slug: string | null) => {
+    userPickRef.current = true;
+    lockSpyUntil.current = Date.now() + 700;
     onCategoryChange(slug);
     scrollToCategory(slug);
   };
 
   return (
-    <div className="ye ye--split">
-      <aside className="ye-panel ye-cats" aria-label="Категории">
-        <p className="ye-cats__heading">Категории</p>
+    <div className={`ye ye--split ${filtering ? "is-filtering" : ""}`}>
+      <aside className="ye-panel ye-cats" aria-label={t("categories")}>
+        <p className="ye-cats__heading">{t("categories")}</p>
         <button
           type="button"
           className={`ye-cats__item ${category === null ? "is-active" : ""}`}
           onClick={() => selectCategory(null)}
         >
-          Все
+          {t("all")}
         </button>
         {categories.map((cat) => (
           <button
@@ -177,9 +202,9 @@ export default function MenuCatalog({
 
       <div className="ye-panel ye-main">
         {loading ? (
-          <p className="ye-empty">Загружаем меню…</p>
+          <p className="ye-empty">{t("loadingMenu")}</p>
         ) : products.length === 0 ? (
-          <p className="ye-empty">Ничего не нашли</p>
+          <p className="ye-empty">{t("nothingFound")}</p>
         ) : (
           <div id="menu-grid" className="ye-sections">
             {sections.map((section) => (
@@ -201,11 +226,11 @@ export default function MenuCatalog({
         )}
       </div>
 
-      <aside className="ye-panel ye-filters-panel" aria-label="Фильтры">
-        <h3 className="ye-filters-panel__title">Фильтры</h3>
+      <aside className="ye-panel ye-filters-panel" aria-label={t("filters")}>
+        <h3 className="ye-filters-panel__title">{t("filters")}</h3>
 
         <div className="ye-filters-panel__block">
-          <p className="ye-filters-panel__label">Сортировка</p>
+          <p className="ye-filters-panel__label">{t("sorting")}</p>
           <div className="ye-filters-panel__list">
             {SORTS.map((s) => (
               <button
@@ -221,17 +246,17 @@ export default function MenuCatalog({
         </div>
 
         <div className="ye-filters-panel__block">
-          <p className="ye-filters-panel__label">Особенности</p>
+          <p className="ye-filters-panel__label">{t("features")}</p>
           <div className="ye-filters-panel__list">
-            {TAGS.map((t) => (
+            {TAGS.map((tag) => (
               <button
-                key={t.id}
+                key={tag.id}
                 type="button"
-                className={`ye-filters-panel__opt ye-filters-panel__opt--tag ${tags.includes(t.id) ? "is-active" : ""}`}
-                onClick={() => onTagToggle(t.id)}
+                className={`ye-filters-panel__opt ye-filters-panel__opt--tag ${tags.includes(tag.id) ? "is-active" : ""}`}
+                onClick={() => onTagToggle(tag.id)}
               >
-                <TagIcon kind={t.id} />
-                <span>{t.label}</span>
+                <TagIcon kind={tag.id} />
+                <span>{tag.label}</span>
               </button>
             ))}
           </div>
@@ -242,11 +267,11 @@ export default function MenuCatalog({
             type="button"
             className="ye-filters-panel__reset"
             onClick={() => {
-              tags.forEach((t) => onTagToggle(t));
+              tags.forEach((tag) => onTagToggle(tag));
               onSortChange("popularity");
             }}
           >
-            Сбросить
+            {t("reset")}
           </button>
         )}
       </aside>
@@ -255,7 +280,7 @@ export default function MenuCatalog({
       <div
         ref={mobileCatsRef}
         className={`ye-panel ye-cats-mobile ${catsStuck ? "is-stuck" : ""}`}
-        aria-label="Категории"
+        aria-label={t("categories")}
       >
         <button
           type="button"
@@ -263,7 +288,7 @@ export default function MenuCatalog({
           className={`ye-cats-mobile__item ${category === null ? "is-active" : ""}`}
           onClick={() => selectCategory(null)}
         >
-          Все
+          {t("all")}
         </button>
         {categories.map((cat) => (
           <button

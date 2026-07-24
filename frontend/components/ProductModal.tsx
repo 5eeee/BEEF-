@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TagGlyph } from "@/components/TagIcon";
+import { useUiPrefs } from "@/components/UiPrefs";
 import { addToCart } from "@/lib/api";
 import type { Product } from "@/lib/types";
 
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export default function ProductModal({ product, onClose }: Props) {
+  const { t, locale } = useUiPrefs();
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -44,8 +46,8 @@ export default function ProductModal({ product, onClose }: Props) {
 
   if (!product) return null;
 
-  const price = Number(product.price).toLocaleString("ru-RU");
-  const weight = product.weight_grams ? `${product.weight_grams} г` : null;
+  const price = Number(product.price).toLocaleString(locale === "en" ? "en-US" : "ru-RU");
+  const weight = product.weight_grams ? `${product.weight_grams} ${t("grams")}` : null;
   const tags = Array.isArray(product.tags) ? product.tags : [];
   const isSpicy =
     tags.includes("spicy") ||
@@ -59,7 +61,7 @@ export default function ProductModal({ product, onClose }: Props) {
       window.dispatchEvent(new Event("cart-updated"));
       onClose();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Не удалось добавить");
+      setError(e instanceof Error ? e.message : t("addFailed"));
     } finally {
       setLoading(false);
     }
@@ -67,9 +69,9 @@ export default function ProductModal({ product, onClose }: Props) {
 
   return (
     <div className="pm-overlay" role="dialog" aria-modal="true" aria-label={product.name}>
-      <button type="button" className="pm-overlay__backdrop" aria-label="Закрыть" onClick={onClose} />
+      <button type="button" className="pm-overlay__backdrop" aria-label={t("close")} onClick={onClose} />
       <div className="pm">
-        <button type="button" className="pm__close" onClick={onClose} aria-label="Закрыть">
+        <button type="button" className="pm__close" onClick={onClose} aria-label={t("close")}>
           ✕
         </button>
 
@@ -83,7 +85,7 @@ export default function ProductModal({ product, onClose }: Props) {
             </div>
           )}
           {isSpicy ? (
-            <span className="pm__chip pm__chip--spicy" title="Острое" aria-label="Острое">
+            <span className="pm__chip pm__chip--spicy" title={t("tagSpicy")} aria-label={t("tagSpicy")}>
               <TagGlyph kind="spicy" />
             </span>
           ) : null}
@@ -99,17 +101,17 @@ export default function ProductModal({ product, onClose }: Props) {
 
           <div className="pm__row">
             <p className="pm__price">{price} ₽</p>
-            <div className="pm__qty" aria-label="Количество">
-              <button type="button" onClick={() => setQuantity((q) => Math.max(1, q - 1))} aria-label="Меньше">
+            <div className="pm__qty">
+              <button type="button" onClick={() => setQuantity((q) => Math.max(1, q - 1))} aria-label="−">
                 −
               </button>
               <span>{quantity}</span>
-              <button type="button" onClick={() => setQuantity((q) => Math.min(99, q + 1))} aria-label="Больше">
+              <button type="button" onClick={() => setQuantity((q) => Math.min(99, q + 1))} aria-label="+">
                 +
               </button>
             </div>
             <button type="button" className="pm__add" onClick={handleAdd} disabled={loading}>
-              {loading ? "…" : "Добавить"}
+              {loading ? t("adding") : t("addToCart")}
             </button>
           </div>
 

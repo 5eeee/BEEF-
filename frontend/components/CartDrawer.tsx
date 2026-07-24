@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useUiPrefs } from "@/components/UiPrefs";
 import { fetchCart, removeCartItem, updateCartItem } from "@/lib/api";
 import type { Cart } from "@/lib/types";
 
@@ -11,7 +12,16 @@ type Props = {
   onClose: () => void;
 };
 
+function CloseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function CartDrawer({ open, onClose }: Props) {
+  const { t, locale } = useUiPrefs();
   const [cart, setCart] = useState<Cart | null>(null);
 
   const load = () => {
@@ -30,6 +40,18 @@ export default function CartDrawer({ open, onClose }: Props) {
     return () => window.removeEventListener("cart-updated", handler);
   }, []);
 
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  const money = (n: number | string) =>
+    Number(n).toLocaleString(locale === "en" ? "en-US" : "ru-RU");
+
   const updateQty = async (productId: string, quantity: number) => {
     const updated = await updateCartItem(productId, quantity);
     setCart(updated);
@@ -45,53 +67,46 @@ export default function CartDrawer({ open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/40">
-      <div className="flex h-full w-full max-w-md flex-col bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b p-4">
-          <h2 className="text-xl font-bold">Корзина</h2>
-          <button type="button" onClick={onClose} className="text-muted hover:text-ink">
-            ✕
+    <div className="cart-drawer-overlay">
+      <button type="button" className="cart-drawer-overlay__backdrop" aria-label={t("close")} onClick={onClose} />
+      <aside className="cart-drawer" aria-label={t("cart")}>
+        <div className="cart-drawer__head">
+          <h2 className="cart-drawer__title">{t("cart")}</h2>
+          <button type="button" className="beef-modal__close" onClick={onClose} aria-label={t("close")}>
+            <CloseIcon />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
+
+        <div className="cart-drawer__body">
           {!cart?.items.length ? (
-            <p className="py-12 text-center text-muted">Корзина пуста</p>
+            <div className="cart-drawer__empty">
+              <p>{t("cartEmpty")}</p>
+              <Link href="/#menu" className="beef-modal__primary" onClick={onClose}>
+                {t("goToMenu")}
+              </Link>
+            </div>
           ) : (
-            <ul className="space-y-4">
+            <ul className="cart-drawer__list">
               {cart.items.map((item) => (
-                <li key={item.product_id} className="flex gap-3">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-cream">
-                    {item.image_url && (
+                <li key={item.product_id} className="cart-drawer__item">
+                  <div className="cart-drawer__thumb">
+                    {item.image_url ? (
                       <Image src={item.image_url} alt={item.name} fill className="object-cover" />
-                    )}
+                    ) : null}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-sm text-terracotta">
-                      {Number(item.unit_price).toLocaleString("ru-RU")} ₽
-                    </p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => updateQty(item.product_id, item.quantity - 1)}
-                        className="h-7 w-7 rounded-full bg-cream text-sm font-bold"
-                      >
+                  <div className="cart-drawer__meta">
+                    <p className="cart-drawer__name">{item.name}</p>
+                    <p className="cart-drawer__price">{money(item.unit_price)} ₽</p>
+                    <div className="cart-drawer__qty">
+                      <button type="button" onClick={() => updateQty(item.product_id, item.quantity - 1)} aria-label="−">
                         −
                       </button>
-                      <span className="text-sm">{item.quantity}</span>
-                      <button
-                        type="button"
-                        onClick={() => updateQty(item.product_id, item.quantity + 1)}
-                        className="h-7 w-7 rounded-full bg-cream text-sm font-bold"
-                      >
+                      <span>{item.quantity}</span>
+                      <button type="button" onClick={() => updateQty(item.product_id, item.quantity + 1)} aria-label="+">
                         +
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => remove(item.product_id)}
-                        className="ml-auto text-xs text-muted hover:text-red-600"
-                      >
-                        Удалить
+                      <button type="button" className="cart-drawer__remove" onClick={() => remove(item.product_id)}>
+                        {t("remove")}
                       </button>
                     </div>
                   </div>
@@ -100,29 +115,22 @@ export default function CartDrawer({ open, onClose }: Props) {
             </ul>
           )}
         </div>
-        {cart && cart.items.length > 0 && (
-          <div className="space-y-3 border-t p-4">
-            <div className="flex justify-between text-lg font-bold">
-              <span>Итого</span>
-              <span>{Number(cart.subtotal).toLocaleString("ru-RU")} ₽</span>
+
+        {cart && cart.items.length > 0 ? (
+          <div className="cart-drawer__foot">
+            <div className="cart-drawer__total">
+              <span>{t("total")}</span>
+              <strong>{money(cart.subtotal)} ₽</strong>
             </div>
-            <Link
-              href="/cart"
-              onClick={onClose}
-              className="block w-full rounded-2xl border border-terracotta py-3 text-center font-semibold text-terracotta"
-            >
-              Перейти в корзину
+            <Link href="/cart" onClick={onClose} className="beef-modal__secondary">
+              {t("openCart")}
             </Link>
-            <Link
-              href="/checkout"
-              onClick={onClose}
-              className="block w-full rounded-2xl bg-terracotta py-3 text-center font-semibold text-white"
-            >
-              Оформить заказ
+            <Link href="/checkout" onClick={onClose} className="beef-modal__primary">
+              {t("checkout")}
             </Link>
           </div>
-        )}
-      </div>
+        ) : null}
+      </aside>
     </div>
   );
 }

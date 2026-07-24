@@ -124,6 +124,7 @@ export default function Header({
   const [progress, setProgress] = useState(0);
   const [address, setAddress] = useState(DEFAULT_ADDR);
   const [addrOpen, setAddrOpen] = useState(false);
+  const [searchExpanded, setSearchExpanded] = useState(false);
   const addrBtnRef = useRef<HTMLButtonElement>(null);
   const isHome = pathname === "/";
 
@@ -264,7 +265,7 @@ export default function Header({
       }}
     >
       <div className="container-page header-bar">
-        <Link href="/" className="header-brand" aria-label="BEEFштекс — на главную">
+        <Link href="/" className="header-brand" aria-label="BEEFштекс">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/brand/logo-mark.png" alt="" className="header-logo" />
           <span className="header-brand__name">
@@ -273,15 +274,18 @@ export default function Header({
         </Link>
 
         {inMenu ? (
-          <>
+          <div className={`header-center header-center--menu ${searchExpanded ? "is-search-open" : ""}`}>
             <div className="header-search min-w-0 flex-1">
               <SearchAutocomplete
+                expanded={searchExpanded}
+                onExpand={() => setSearchExpanded(true)}
+                onCollapse={() => setSearchExpanded(false)}
                 onSelect={(p) => {
                   onSearchSelect?.(p);
+                  setSearchExpanded(false);
                 }}
               />
             </div>
-
             <button
               ref={addrBtnRef}
               type="button"
@@ -293,10 +297,10 @@ export default function Header({
               <IconPin />
               <span className="header-addr__text">{address}</span>
             </button>
-          </>
+          </div>
         ) : (
-          <>
-            <nav className="header-nav" aria-label="Основное меню">
+          <div className="header-center">
+            <nav className="header-nav" aria-label={t("mainNav")}>
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -308,15 +312,19 @@ export default function Header({
                 </Link>
               ))}
             </nav>
+          </div>
+        )}
 
+        <div className="header-phone-wrap" hidden={inMenu} aria-hidden={inMenu}>
+          {!inMenu ? (
             <a href="tel:+79160356777" className="header-phone">
               +7 (916) 035-67-77
             </a>
-          </>
-        )}
+          ) : null}
+        </div>
 
-        <div className={`header-actions ${inMenu ? "" : "header-actions--hero"}`}>
-          {isHome && !inMenu ? (
+        <div className="header-actions-wrap">
+          <div className={`header-actions ${inMenu ? "" : "header-actions--hero"}`}>
             <div className="header-prefs" role="group" aria-label="Language and theme">
               <button
                 type="button"
@@ -335,79 +343,79 @@ export default function Header({
                 {colorMode === "dark" ? <IconSun /> : <IconMoon />}
               </button>
             </div>
-          ) : null}
 
-          {!inMenu ? (
-            <button
-              type="button"
-              className="header-action header-action--nav"
-              aria-label={navOpen ? t("closeNav") : t("openNav")}
-              aria-expanded={navOpen}
-              onClick={() => setNavOpen((v) => !v)}
-            >
-              <IconMenu open={navOpen} />
-            </button>
-          ) : null}
-
-          {isLoggedIn ? (
-            <div className="relative">
+            {!inMenu ? (
               <button
                 type="button"
-                onClick={() => setMenuOpen((v) => !v)}
-                className="header-action header-action--user"
-                aria-label={t("cabinet")}
+                className="header-action header-action--nav"
+                aria-label={navOpen ? t("closeNav") : t("openNav")}
+                aria-expanded={navOpen}
+                onClick={() => setNavOpen((v) => !v)}
               >
-                <IconUser />
-                <span className="header-action__label">{t("cabinet")}</span>
+                <IconMenu open={navOpen} />
               </button>
-              {menuOpen && (
-                <>
-                  <button
-                    type="button"
-                    className="fixed inset-0 z-10"
-                    aria-label="Закрыть меню"
-                    onClick={() => setMenuOpen(false)}
-                  />
-                  <div className="header-account-menu">
-                    {user?.phone ? <p className="header-account-menu__phone">{user.phone}</p> : null}
-                    <Link href="/orders" className="header-account-menu__item" onClick={() => setMenuOpen(false)}>
-                      Мои заказы
-                    </Link>
-                    <Link href="/profile" className="header-account-menu__item" onClick={() => setMenuOpen(false)}>
-                      Настройки
-                    </Link>
+            ) : null}
+
+            {isLoggedIn ? (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setMenuOpen((v) => !v)}
+                  className="header-action header-action--user"
+                  aria-label={t("cabinet")}
+                >
+                  <IconUser />
+                  <span className="header-action__label">{t("cabinet")}</span>
+                </button>
+                {menuOpen && (
+                  <>
                     <button
                       type="button"
-                      onClick={() => {
-                        logout();
-                        setMenuOpen(false);
-                      }}
-                      className="header-account-menu__item header-account-menu__item--danger"
-                    >
-                      Выйти
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          ) : (
-            <button type="button" onClick={openLogin} className="header-action header-action--user" aria-label={t("login")}>
-              <IconUser />
-              <span className="header-action__label">{t("login")}</span>
-            </button>
-          )}
+                      className="fixed inset-0 z-10"
+                      aria-label={t("close")}
+                      onClick={() => setMenuOpen(false)}
+                    />
+                    <div className="header-account-menu">
+                      {user?.phone ? <p className="header-account-menu__phone">{user.phone}</p> : null}
+                      <Link href="/orders" className="header-account-menu__item" onClick={() => setMenuOpen(false)}>
+                        {t("myOrders")}
+                      </Link>
+                      <Link href="/profile" className="header-account-menu__item" onClick={() => setMenuOpen(false)}>
+                        {t("settings")}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          logout();
+                          setMenuOpen(false);
+                        }}
+                        className="header-account-menu__item header-account-menu__item--danger"
+                      >
+                        {t("logout")}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <button type="button" onClick={openLogin} className="header-action header-action--user" aria-label={t("login")}>
+                <IconUser />
+                <span className="header-action__label">{t("login")}</span>
+              </button>
+            )}
 
-          <button
-            type="button"
-            onClick={onCartClick}
-            className="header-action header-action--cart"
-            aria-label={t("cart")}
-            data-cart-target
-          >
-            <IconCart />
-            <span className="header-action__label">{t("cart")}</span>
-            {count > 0 ? <span className="header-action__badge">{count}</span> : null}
-          </button>
+            <button
+              type="button"
+              onClick={onCartClick}
+              className="header-action header-action--cart"
+              aria-label={t("cart")}
+              data-cart-target
+            >
+              <IconCart />
+              <span className="header-action__label">{t("cart")}</span>
+              {count > 0 ? <span className="header-action__badge">{count}</span> : null}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -445,11 +453,11 @@ export default function Header({
                   document.getElementById("menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
               >
-                {t("toMenu")}
+                {t("goToMenu")}
               </button>
             ) : (
               <Link href="/#menu" className="header-mobile-nav__menu" onClick={() => setNavOpen(false)}>
-                {t("toMenu")}
+                {t("goToMenu")}
               </Link>
             )}
           </nav>

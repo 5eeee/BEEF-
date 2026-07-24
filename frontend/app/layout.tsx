@@ -39,8 +39,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${outfit.variable} ${fraunces.variable}`}>
-      <body className="min-h-screen font-sans">
+    <html lang="ru" className={`${outfit.variable} ${fraunces.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen font-sans" suppressHydrationWarning>
+        <Script
+          id="theme-boot"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("beefshteks_theme");var l=localStorage.getItem("beefshteks_locale");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;if(l==="en"||l==="ru"){document.documentElement.dataset.locale=l;document.documentElement.lang=l==="en"?"en":"ru";}}catch(e){}`,
+          }}
+        />
         <Script
           id="jsonld-org"
           type="application/ld+json"

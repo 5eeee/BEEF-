@@ -3,10 +3,20 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { sendOtp, verifyOtp } from "@/lib/auth";
 import { useAuth } from "@/components/AuthProvider";
+import { useUiPrefs } from "@/components/UiPrefs";
 
 type Step = "phone" | "otp";
 
+function CloseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function LoginModal() {
+  const { t } = useUiPrefs();
   const { loginOpen, closeLogin, refreshUser } = useAuth();
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("+7");
@@ -24,6 +34,15 @@ export default function LoginModal() {
     }
   }, [loginOpen]);
 
+  useEffect(() => {
+    if (!loginOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [loginOpen]);
+
   if (!loginOpen) return null;
 
   const onSendOtp = async (e: FormEvent) => {
@@ -35,7 +54,7 @@ export default function LoginModal() {
       setStep("otp");
       setTimeout(() => otpRefs.current[0]?.focus(), 100);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Не удалось отправить код");
+      setError(err instanceof Error ? err.message : t("otpSendFail"));
     } finally {
       setLoading(false);
     }
@@ -51,7 +70,7 @@ export default function LoginModal() {
       await refreshUser();
       closeLogin();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Неверный код");
+      setError(err instanceof Error ? err.message : t("otpInvalid"));
       setCode(["", "", "", ""]);
       otpRefs.current[0]?.focus();
     } finally {
@@ -75,64 +94,49 @@ export default function LoginModal() {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="login-title"
-    >
-      <button
-        type="button"
-        className="absolute inset-0 cursor-default"
-        aria-label="Закрыть"
-        onClick={closeLogin}
-      />
-      <div className="relative w-full max-w-md rounded-t-3xl bg-white p-6 shadow-xl sm:rounded-3xl">
-        <button
-          type="button"
-          onClick={closeLogin}
-          className="absolute right-4 top-4 text-muted hover:text-ink"
-          aria-label="Закрыть"
-        >
-          ✕
+    <div className="beef-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="login-title">
+      <button type="button" className="beef-modal-overlay__backdrop" aria-label={t("close")} onClick={closeLogin} />
+      <div className="beef-modal login-modal">
+        <button type="button" className="beef-modal__close" onClick={closeLogin} aria-label={t("close")}>
+          <CloseIcon />
         </button>
 
-        <h2 id="login-title" className="mb-1 text-2xl font-bold text-ink">
-          Вход
+        <div className="login-modal__brand" aria-hidden>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/brand/logo-mark.png" alt="" />
+        </div>
+
+        <h2 id="login-title" className="beef-modal__title">
+          {t("loginTitle")}
         </h2>
-        <p className="mb-6 text-sm text-muted">
-          {step === "phone"
-            ? "Введите номер телефона — отправим SMS с кодом"
-            : `Код отправлен на ${phone}`}
+        <p className="beef-modal__lead">
+          {step === "phone" ? t("loginPhoneHint") : `${t("loginCodeHint")} ${phone}`}
         </p>
 
         {step === "phone" ? (
-          <form onSubmit={onSendOtp} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium">Телефон</label>
-              <input
-                required
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                pattern="\+7\d{10}"
-                className="w-full rounded-xl border border-stone-200 px-4 py-3 text-lg"
-                placeholder="+79001234567"
-                autoFocus
-              />
-            </div>
-            {error && <p className="text-sm text-red-600">{error}</p>}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-2xl bg-terracotta py-3 font-semibold text-white disabled:opacity-60"
-            >
-              {loading ? "Отправляем…" : "Получить код"}
+          <form onSubmit={onSendOtp} className="login-modal__form">
+            <label className="beef-modal__label" htmlFor="login-phone">
+              {t("phone")}
+            </label>
+            <input
+              id="login-phone"
+              required
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              pattern="\+7\d{10}"
+              className="beef-modal__input"
+              placeholder="+79001234567"
+              autoFocus
+            />
+            {error ? <p className="beef-modal__error">{error}</p> : null}
+            <button type="submit" disabled={loading} className="beef-modal__primary">
+              {loading ? t("sendingCode") : t("getCode")}
             </button>
           </form>
         ) : (
-          <div className="space-y-4">
-            <div className="flex justify-center gap-3">
+          <div className="login-modal__otp">
+            <div className="login-modal__digits">
               {code.map((digit, i) => (
                 <input
                   key={i}
@@ -145,22 +149,22 @@ export default function LoginModal() {
                   value={digit}
                   onChange={(e) => handleOtpChange(i, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                  className="h-14 w-12 rounded-xl border border-stone-200 text-center text-2xl font-bold focus:border-terracotta focus:outline-none focus:ring-2 focus:ring-terracotta/20"
-                  aria-label={`Цифра ${i + 1}`}
+                  className="login-modal__digit"
+                  aria-label={`${i + 1}`}
                 />
               ))}
             </div>
-            {error && <p className="text-center text-sm text-red-600">{error}</p>}
-            {loading && <p className="text-center text-sm text-muted">Проверяем…</p>}
+            {error ? <p className="beef-modal__error beef-modal__error--center">{error}</p> : null}
+            {loading ? <p className="beef-modal__hint">{t("checkingCode")}</p> : null}
             <button
               type="button"
+              className="beef-modal__link"
               onClick={() => {
                 setStep("phone");
                 setCode(["", "", "", ""]);
               }}
-              className="w-full text-sm text-terracotta hover:underline"
             >
-              Изменить номер
+              {t("changePhone")}
             </button>
           </div>
         )}

@@ -19,6 +19,10 @@ def verify_admin(x_admin_token: str | None = Header(None, alias="X-Admin-Token")
 PROMO_CODES: dict[str, dict] = {
     "WELCOME10": {"type": "percent", "value": Decimal("10"), "active": True},
     "BEEF200": {"type": "fixed", "value": Decimal("200"), "active": True},
+    "SMASH15": {"type": "percent", "value": Decimal("15"), "active": True},
+    "COMBO2": {"type": "percent", "value": Decimal("20"), "active": True},
+    "SPICY10": {"type": "percent", "value": Decimal("10"), "active": True},
+    "DOUBLE20": {"type": "percent", "value": Decimal("20"), "active": True},
 }
 
 

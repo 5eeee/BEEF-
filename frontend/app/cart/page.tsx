@@ -4,15 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
+import { useUiPrefs } from "@/components/UiPrefs";
 import { applyPromo, fetchCart, removeCartItem, updateCartItem } from "@/lib/api";
 import type { Cart } from "@/lib/types";
 
 export default function CartPage() {
+  const { t, locale } = useUiPrefs();
   const [cart, setCart] = useState<Cart | null>(null);
   const [promo, setPromo] = useState("");
   const [discount, setDiscount] = useState("0");
   const [promoError, setPromoError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const money = (n: number | string) =>
+    Number(n).toLocaleString(locale === "en" ? "en-US" : "ru-RU");
 
   const load = () => {
     fetchCart()
@@ -51,17 +56,17 @@ export default function CartPage() {
   const total = cart ? Number(cart.subtotal) - Number(discount) : 0;
 
   return (
-    <>
-      <Header />
+    <div className="about-page">
+      <Header theme="dark" transparent={false} variant="hero" />
       <main className="beef-page container-page py-8">
-        <h1 className="mb-6 text-3xl font-bold">Корзина</h1>
+        <h1 className="mb-6 text-3xl font-bold">{t("cart")}</h1>
         {loading ? (
-          <p className="text-muted">Загрузка…</p>
+          <p className="text-muted">{t("loadingMenu")}</p>
         ) : !cart?.items.length ? (
           <div className="py-16 text-center">
-            <p className="mb-4 text-muted">Корзина пуста</p>
-            <Link href="/" className="font-semibold text-terracotta hover:underline">
-              Перейти в меню
+            <p className="mb-4 text-muted">{t("cartEmpty")}</p>
+            <Link href="/#menu" className="font-semibold text-[#c8e635] hover:underline">
+              {t("goToMenu")}
             </Link>
           </div>
         ) : (
@@ -79,9 +84,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold">{item.name}</p>
-                    <p className="text-terracotta">
-                      {Number(item.unit_price).toLocaleString("ru-RU")} ₽
-                    </p>
+                    <p className="text-[#c8e635] font-bold">{money(item.unit_price)} ₽</p>
                     <div className="mt-2 flex items-center gap-2">
                       <button
                         type="button"
@@ -103,13 +106,11 @@ export default function CartPage() {
                         onClick={() => remove(item.product_id)}
                         className="ml-auto text-sm text-muted hover:text-red-600"
                       >
-                        Удалить
+                        {t("remove")}
                       </button>
                     </div>
                   </div>
-                  <p className="font-bold">
-                    {Number(item.line_total).toLocaleString("ru-RU")} ₽
-                  </p>
+                  <p className="font-bold">{money(item.line_total)} ₽</p>
                 </li>
               ))}
             </ul>
@@ -119,13 +120,13 @@ export default function CartPage() {
                 <input
                   value={promo}
                   onChange={(e) => setPromo(e.target.value.toUpperCase())}
-                  placeholder="WELCOME10"
+                  placeholder="BEEF300"
                   className="flex-1 rounded-xl border border-stone-200 px-3 py-2"
                 />
                 <button
                   type="button"
                   onClick={apply}
-                  className="rounded-xl bg-mustard px-4 py-2 font-semibold text-ink"
+                  className="rounded-xl bg-[#c8e635] px-4 py-2 font-semibold text-ink"
                 >
                   OK
                 </button>
@@ -134,29 +135,29 @@ export default function CartPage() {
               <div className="space-y-2 border-t border-stone-200 pt-4 text-sm">
                 <div className="flex justify-between">
                   <span>Сумма</span>
-                  <span>{Number(cart.subtotal).toLocaleString("ru-RU")} ₽</span>
+                  <span>{money(cart.subtotal)} ₽</span>
                 </div>
                 {Number(discount) > 0 && (
                   <div className="flex justify-between text-green-700">
                     <span>Скидка</span>
-                    <span>−{Number(discount).toLocaleString("ru-RU")} ₽</span>
+                    <span>−{money(discount)} ₽</span>
                   </div>
                 )}
                 <div className="flex justify-between text-lg font-bold">
-                  <span>Итого</span>
-                  <span>{total.toLocaleString("ru-RU")} ₽</span>
+                  <span>{t("total")}</span>
+                  <span>{money(total)} ₽</span>
                 </div>
               </div>
               <Link
                 href={`/checkout${promo ? `?promo=${promo}` : ""}`}
-                className="block w-full rounded-2xl bg-terracotta py-4 text-center font-semibold text-white"
+                className="block w-full rounded-2xl bg-[#c8e635] py-4 text-center font-semibold text-[#14110f]"
               >
-                Оформить заказ
+                {t("checkout")}
               </Link>
             </aside>
           </div>
         )}
       </main>
-    </>
+    </div>
   );
 }

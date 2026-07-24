@@ -15,7 +15,6 @@ export default function SiteInfoSection() {
     <section className="site-info" aria-label="Доставка и контакты">
       <div className="site-info__grid site-info__grid--two">
         <div className="site-info__block" id="delivery">
-          <p className="site-info__eyebrow">Самовывоз / Доставка</p>
           <h2 className="site-info__title">Как получить заказ</h2>
           <p className="site-info__text">
             <strong>Курьером:</strong> до 2000 ₽ — 300 ₽, от 2000 ₽ — бесплатно.
@@ -34,7 +33,6 @@ export default function SiteInfoSection() {
         </div>
 
         <div className="site-info__block" id="contacts">
-          <p className="site-info__eyebrow">Контакты</p>
           <h2 className="site-info__title">BEEFштекс</h2>
           <p className="site-info__text">
             <a href="tel:+79160356777" className="site-info__phone">

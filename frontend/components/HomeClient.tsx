@@ -1,6 +1,5 @@
 "use client";
 
-import BlogPreview from "@/components/BlogPreview";
 import BrandFooter from "@/components/BrandFooter";
 import CartDrawer from "@/components/CartDrawer";
 import CinematicHero from "@/components/CinematicHero";
@@ -8,26 +7,28 @@ import Header from "@/components/Header";
 import HomePromoScreen from "@/components/HomePromoScreen";
 import MenuCatalog from "@/components/MenuCatalog";
 import ProductModal from "@/components/ProductModal";
-import ReviewsSection from "@/components/ReviewsSection";
-import { fetchActivePromos, fetchBlogPosts, fetchCategories, fetchProduct, fetchProducts, fetchReviews } from "@/lib/api";
-import type { BlogPost, Campaign, Category, Product, Review } from "@/lib/types";
-import { useCallback, useEffect, useState } from "react";
+import { useUiPrefs } from "@/components/UiPrefs";
+import { fetchActivePromos, fetchCategories, fetchProduct, fetchProducts } from "@/lib/api";
+import type { Campaign, Category, Product } from "@/lib/types";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function HomeClient() {
+  const { t } = useUiPrefs();
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [sort, setSort] = useState("popularity");
   const [selected, setSelected] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [filtering, setFiltering] = useState(false);
+  const initialLoad = useRef(true);
 
   const loadProducts = useCallback(async () => {
-    setLoading(true);
+    if (initialLoad.current) setLoading(true);
+    else setFiltering(true);
     try {
       const params: Record<string, string> = { sort };
       if (tags.length) params.tags = tags.join(",");
@@ -35,6 +36,8 @@ export default function HomeClient() {
       setProducts(data.items);
     } finally {
       setLoading(false);
+      setFiltering(false);
+      initialLoad.current = false;
     }
   }, [tags, sort]);
 
@@ -43,12 +46,6 @@ export default function HomeClient() {
     fetchActivePromos()
       .then(setCampaigns)
       .catch(() => setCampaigns([]));
-    fetchReviews(5)
-      .then((data) => setReviews(data.items))
-      .catch(() => {});
-    fetchBlogPosts(2)
-      .then((data) => setBlogPosts(data.items))
-      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -104,7 +101,7 @@ export default function HomeClient() {
       <div className="site-shell is-visible">
         {isDemo ? (
           <div className="demo-banner" role="status">
-            Демо для заказчика — меню и корзина работают в облаке. Полный заказ/оплата — на следующем этапе.
+            {t("demoBanner")}
           </div>
         ) : null}
         <Header
@@ -124,7 +121,7 @@ export default function HomeClient() {
 
           <HomePromoScreen campaigns={campaigns} />
 
-          <section id="catalog" className="home-catalog" aria-label="Каталог меню">
+          <section id="catalog" className="home-catalog" aria-label={t("catalogLabel")}>
             <div className="menu-sheet__inner home-catalog__inner">
               <MenuCatalog
                 categories={categories}
@@ -133,16 +130,12 @@ export default function HomeClient() {
                 tags={tags}
                 sort={sort}
                 loading={loading}
+                filtering={filtering}
                 onCategoryChange={handleCategoryChange}
                 onTagToggle={toggleTag}
                 onSortChange={setSort}
                 onProductSelect={openProduct}
               />
-
-              <div className="menu-sheet__footer">
-                <ReviewsSection reviews={reviews} />
-                <BlogPreview posts={blogPosts} />
-              </div>
             </div>
           </section>
 

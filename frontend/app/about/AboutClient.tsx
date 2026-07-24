@@ -24,7 +24,6 @@ export default function AboutClient() {
           />
           <div className="about-hero__shade" />
           <div className="container-page about-hero__content">
-            <p className="about-hero__eyebrow">Коломна · с 2023</p>
             <h1 id="about-title" className="about-hero__brand">
               {about.brand}
             </h1>
@@ -154,7 +153,6 @@ export default function AboutClient() {
         <section className="about-visit" id="delivery" aria-labelledby="delivery-title">
           <div className="container-page about-visit__grid">
             <div>
-              <p className="about-section__eyebrow">Самовывоз / Доставка</p>
               <h2 id="delivery-title" className="about-section__title">
                 Горячими — к вам или для вас
               </h2>
@@ -205,7 +203,7 @@ export default function AboutClient() {
         <section className="about-contact" id="contacts" aria-labelledby="contacts-title">
           <div className="container-page about-contact__inner">
             <h2 id="contacts-title" className="about-section__title">
-              Залетай к нам
+              Ждём в гостях
             </h2>
             <p className="about-contacts__hours">{about.contacts.hours} · каждый день</p>
             <a className="about-contacts__phone" href={`tel:${tel}`}>
