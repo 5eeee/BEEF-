@@ -1311,7 +1311,8 @@ html[data-theme="light"] .home-catalog {
   top: 0;
   width: min(72%, 380px);
   height: auto;
-  transform: translate(-50%, -50%);
+  /* ~30% peeks above the burger, ~70% hidden behind it */
+  transform: translate(-50%, -30%);
   object-fit: contain;
   filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
   user-select: none;
