@@ -254,7 +254,7 @@ export default function Header({
 
   return (
     <header
-      className={`header-shell ${transparent ? "fixed inset-x-0 top-0 z-50" : "sticky top-0 z-40"} ${useLightChrome ? "is-light" : ""}`}
+      className={`header-shell ${transparent ? "fixed inset-x-0 top-0 z-[90]" : "sticky top-0 z-40"} ${useLightChrome ? "is-light" : ""}`}
       data-mode={inMenu ? "menu" : "hero"}
       style={{
         backgroundColor: bg,
