@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 import DeliveryAddressModal from "@/components/DeliveryAddressModal";
@@ -124,6 +124,7 @@ export default function Header({
   const [progress, setProgress] = useState(0);
   const [address, setAddress] = useState(DEFAULT_ADDR);
   const [addrOpen, setAddrOpen] = useState(false);
+  const addrBtnRef = useRef<HTMLButtonElement>(null);
   const isHome = pathname === "/";
 
   const navItems = useMemo(
@@ -282,9 +283,10 @@ export default function Header({
             </div>
 
             <button
+              ref={addrBtnRef}
               type="button"
               className="header-addr"
-              onClick={() => setAddrOpen(true)}
+              onClick={() => setAddrOpen((v) => !v)}
               aria-haspopup="dialog"
               aria-expanded={addrOpen}
             >
@@ -456,6 +458,7 @@ export default function Header({
 
       <DeliveryAddressModal
         open={addrOpen}
+        anchorRef={addrBtnRef}
         onClose={() => setAddrOpen(false)}
         onConfirm={(next) => setAddress(next)}
       />
